@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext", // or "ESNext" if using ESM
+    "outDir": "dist",
+    "rootDir": ".", // <- include server.ts and src/
+    "baseUrl": ".", // <- allows absolute imports from root
+    "paths": {
+      "#src/*": ["src/*"],
+      "#config/*": ["src/configs/*"],
+      "#dto/*": ["src/dtos/*"],
+      "#controller/*": ["src/controllers/*"],
+      "#route/*": ["src/routes/*"],
+      "#model/*": ["src/models/*"],
+      "#database/*": ["src/databases/*"],
+      "#service/*": ["src/services/*"],
+      "#repository/*": ["src/repositories/*"],
+      "#middleware/*": ["src/middlewares/*"],
+      "#resource/*": ["src/resources/*"],
+      "#queue/*": ["src/queues/*"],
+      "#worker/*": ["src/workers/*"],
+      "#types/*": ["src/types/*"],
+
+      "#core_util/*": ["src/utils/cores/*"],
+      "#validator_util/*": ["src/utils/validators/*"],
+      "#main_util/*": ["src/utils/mains/*"],
+      "#service_util/*": ["src/utils/services/*"]
+    },
+    "esModuleInterop": true,
+    // "resolveJsonModule": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["src", "server.ts"]
+}
+
