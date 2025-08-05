@@ -1,6 +1,6 @@
-# EXPRESS JS API STARTER PROJECT (IMPORT)
+# EXPRESS JS API STARTER PROJECT (TYPESCRIPT)
 
-A boilerplate Express.js (ESM `import) API project for rapid backend development. This project is designed to help you kickstart any API-based service quickly, with built-in user authentication and OTP-based signup options. this project is designed with clean architecture
+A boilerplate Express.js (ESM `import) with Typescript API project for rapid backend development. This project is designed to help you kickstart any API-based service quickly, with built-in user authentication and OTP-based signup options. this project is designed with clean architecture
 
 ---
 
@@ -26,11 +26,11 @@ OLADEJO JEPHTHAH
 
 ## 🛠 TECH STACK
 
-- **Node.js** with **Express.js**
+- **Node.js** with **Express.js** and **TypeScript**
 - **Redis** (optional, for token/session storage)
 - **MongoDB** or **SQL** (for storing user data)
-- **JWT** for stateless authentication
-- **WhatsApp/email integration** for OTP delivery (via provider of your choice)
+- **JWT** (Optional) for stateless authentication
+- **WhatsApp/email/SMS integration** for OTP delivery (via provider of your choice)
 
 ---
 
@@ -50,6 +50,7 @@ project-root/
 │ ├── resources/ # Response formatters, transformers, etc.
 │ ├── routes/ # API route definitions
 │ ├── services/ # Business logic (OTP, token generation, etc.)
+│ ├── types/ # typescript interfaces are stored
 │ ├── utils/ # Helper functions (token gen, hash, etc.)
 │ ├── workers/ # Background workers (e.g. OTP expiry, email jobs)
 │
