@@ -99,10 +99,10 @@ class AuthController extends BaseController{
             const { status, data } = await resetPassword(req.body);
             if (status) this.triggerValidationError(data);
 
-           const response  =  await AuthService.resetPassword(req);
-
-           // Ensure response is an object, not void
-           this.sendResponse(res,        } catch (error) {
+           const response  =  await AuthService.resetPassword(req) ?? {};
+           
+           this.sendResponse(res, response, "Password successfully reset");
+        } catch (error) {
             this.handleException(res, error);
         }
     }
