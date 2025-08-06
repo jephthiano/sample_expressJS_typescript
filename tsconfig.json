@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "ESNext", // or "ESNext" if using ESM
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext", // or "ESNext" if using ESM [set to nodenext if moduleResolution is used as nodenest]
     "outDir": "dist",
     "rootDir": ".", // <- include server.ts and src/
     "baseUrl": ".", // <- allows absolute imports from root
@@ -27,6 +28,7 @@
       "#service_util/*": ["src/utils/services/*"]
     },
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     // "resolveJsonModule": true,
     "strict": true,
     "skipLibCheck": true
