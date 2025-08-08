@@ -1,4 +1,4 @@
-import { triggerError } from "../cores/handler.util.js";
+import { triggerError} from '#core_util/handler.util.js';
 
 const initialResponse = (type = 'invalid_request') => ({
     status: false,
@@ -15,21 +15,21 @@ const getEnvorThrow = (key: string): string => {
     return val;
 }
 
-const isEmptyObject = (obj: {}) => Object.keys(obj).length === 0;
+const isEmptyObject = (obj) => Object.keys(obj).length === 0;
 
-const isEmptyArray = (array: []) => Array.isArray(array) && array.length === 0;
+const isEmptyArray = (array) => Array.isArray(array) && array.length === 0;
 
-const isObject = (value: any) => typeof value === 'object' && value !== null && !Array.isArray(value);
+const isObject = (value) => typeof value === 'object' && value !== null && !Array.isArray(value);
 
-const isKeyInObject = (key: any, object: {}) => Object.prototype.hasOwnProperty.call(object, key);
+const isKeyInObject = (key, object) => Object.prototype.hasOwnProperty.call(object, key);
 
-const isEmptyString = (variable: string) => typeof variable === 'string' && variable.trim().length === 0;
+const isEmptyString = (variable) => typeof variable === 'string' && variable.trim().length === 0;
 
-const inArray = (value: any, array []) => array.includes(value);
+const inArray = (value, array) => array.includes(value);
 
-const isValidData = (data: any) => !(data === undefined || data === null || data === '');
+const isValidData = (data) => !(data === undefined || data === null || data === '');
 
-const isPhoneSample = (value: any) => /^0?\d*$/.test(value.trim());
+const isPhoneSample = (value) => /^0?\d*$/.test(value.trim());
 
 const detectInputType = (value) => {
     // Looks like a phone number if it starts with digits (even with leading zero)

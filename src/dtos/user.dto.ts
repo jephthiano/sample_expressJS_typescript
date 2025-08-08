@@ -1,8 +1,9 @@
 import { validateInput }  from '#main_util/security.util.js';
+import { CreateUserInterface, ResetPasswordInterface } from '#src/types/interface.js';
 
-function createUserDTO(data) {
+function createUserDTO(data: CreateUserInterface) {
     const veriType = data.receiving_medium 
-                ? validateInput(data.receiving_medium) ? 'mobile_number' : 'email'
+                ? validateInput(data.receiving_medium, 'mobile_number') ? 'mobile_number' : 'email'
                 : null ;
                 
     let email; let mobile_number; 
@@ -36,7 +37,7 @@ function createUserDTO(data) {
     };
 }
 
-function updatePasswordDTO(data) {
+function updatePasswordDTO(data: ResetPasswordInterface) {
     return {
         receiving_medium: data.receiving_medium?.trim().toLowerCase(),
         password: data.password,

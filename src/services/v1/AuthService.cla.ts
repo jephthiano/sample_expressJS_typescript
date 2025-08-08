@@ -7,7 +7,6 @@ import { sendMessage } from '#main_util/messaging.util.js';
 import { deleteApiToken } from '#main_util/token.util.js';
 import { triggerError} from '#core_util/handler.util.js';
 
-
 class AuthService{
 
     // LOGIN
