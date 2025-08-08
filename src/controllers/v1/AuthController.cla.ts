@@ -24,7 +24,7 @@ class AuthController extends BaseController{
 
     }
 
-    // REGISTER`
+    // REGISTER
     static async register(req: Request, res: Response) {
         try {
             //validate inputs

@@ -1,3 +1,5 @@
+import { Otp } from "#src/types/interface.js";
+
 function createOtpDTO(data) {
 
     return {

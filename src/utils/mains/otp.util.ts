@@ -8,11 +8,11 @@ import { triggerError} from '#core_util/handler.util.js';
 const sendOtp = async (messageData) => {
     let response = false;
     messageData.code = String(generateUniqueId(6));
-    messageData.type = 'otp_code';
-
+    
     // Store OTP
     if (await storeOtp(messageData)) {
         // send code with otp [queue]
+        messageData.type = 'otp_code';
         sendMessage(messageData, 'queue');
         response = true;
     }

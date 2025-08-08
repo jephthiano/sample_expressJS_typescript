@@ -1,6 +1,7 @@
 import Otp from '#model/OtpToken.schema.js';
 import { createOtpDTO } from '#dto/otp.dto.js';
 import { selEncrypt }  from '#main_util/security.util.js';
+import { SendOtpType, UpdateOtpType } from '#src/types/interface.js';
 
 //FIND ONE OTP DATA
 const findOneOtpData = async(receiving_medium: string, use_case: string, status: string)=> {
@@ -10,12 +11,11 @@ const findOneOtpData = async(receiving_medium: string, use_case: string, status:
 }
 
 // STORE OTP
-const storeOtp = async (data): Promise<boolean> => {
+const storeOtp = async (data: SendOtpType): Promise<boolean> => {
     let result = null;
 
     const otpData = createOtpDTO(data);
     const { receiving_medium, code, use_case } = otpData;
-
 
     result = await Otp.findOneAndUpdate(
         { receiving_medium: selEncrypt(receiving_medium, 'receiving_medium') },
@@ -30,7 +30,7 @@ const storeOtp = async (data): Promise<boolean> => {
 };
 
 // UPDATE OTP
-const updateOtpStatus = async (data): Promise<boolean> => {
+const updateOtpStatus = async (data: UpdateOtpType): Promise<boolean> => {
     const otpData = createOtpDTO(data);
     const { receiving_medium, use_case } = otpData;
     
