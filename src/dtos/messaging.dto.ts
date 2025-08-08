@@ -1,7 +1,9 @@
 import { ucFirst }  from '#main_util/general.util.js';
+import { htmlEmailInterface, sendMessageInterface } from '#src/types/interface.js';
+import { sendMessageType } from '#src/types/types.js';
 
 // pass [first_name, receiving_medium, send_medium, type and misc]
-function sendMessageDTO(data) {
+function sendMessageDTO(data: sendMessageInterface) {
     const send_medium = data.send_medium || 'email';
     
     const match = {
@@ -14,7 +16,7 @@ function sendMessageDTO(data) {
     return (match[send_medium] || match.email)(); // fallback to email
 }
 
-const emailDTO = (data) => {
+const emailDTO = (data: sendMessageInterface) => {
     const first_name = data.first_name?.trim()
     const subject = subjectTemplate(data.type);
     const text_content = messageTemplate(data.type, data.send_medium, {
@@ -29,7 +31,7 @@ const emailDTO = (data) => {
     };
 };
 
-const smsDTO = (data) => {
+const smsDTO = (data: sendMessageInterface) => {
     const send_medium = 'sms';
     return {
         first_name: data.first_name?.trim(),
@@ -40,7 +42,7 @@ const smsDTO = (data) => {
     };
 };
 
-const whatsappDTO = (data) => {
+const whatsappDTO = (data: sendMessageInterface) => {
     const send_medium = 'whatsapp';
     return {
         first_name: data.first_name?.trim(),
@@ -52,7 +54,7 @@ const whatsappDTO = (data) => {
 };
 
 
-const pushNotificationDTO = (data) => {
+const pushNotificationDTO = (data: sendMessageInterface) => {
     const send_medium = 'push_notification';
     return {
         first_name: data.first_name?.trim(),
@@ -63,7 +65,7 @@ const pushNotificationDTO = (data) => {
     };
 };
 
-const subjectTemplate = (type) => {
+const subjectTemplate = (type: sendMessageType) => {
     const subjects = {
         welcome: 'WELCOME TO JEPH VTU',
         otp_code: 'Request for OTP Code',
@@ -72,7 +74,10 @@ const subjectTemplate = (type) => {
     return subjects[type] || '';
 };
 
-const messageTemplate = (type, medium = 'email', data = {}) => {
+const messageTemplate = (type:sendMessageType, medium = 'email', data: Record<string, unknown> = {}) => {
+    if(medium){
+
+    }
     const messages = {
         welcome: 'You have successfully registered with Jeph VTU. We are delighted to have you as our customer.',
         otp_code: `Your OTP code is ${data.code}. Please note that this code expires in 5 minutes. Do not share this code with anyone.`,
@@ -81,7 +86,7 @@ const messageTemplate = (type, medium = 'email', data = {}) => {
     return messages[type] || '';
 };
 
-const htmlEmailTemplate = (data) => {
+const htmlEmailTemplate = (data: htmlEmailInterface) => {
     const site_url = 'https://jeph-vtu.vercel.app';
     const media_url = 'https://jeph-vtu.vercel.app/media/logo.png';
     const company_name = 'Jeph VTU';

@@ -3,9 +3,10 @@ import EmailService from '#service_util/messaging/EmailService.js';
 import SmsService from '#service_util/messaging/SmsService.js';
 import WhatsAppService from '#service_util/messaging/WhatsAppService.js';
 import PushNotificationService from '#service_util/messaging/PushNotificationService.js';
+import { sendMessageInterface } from '#src/types/interface.js';
 
 
-const sendMessage = async (data, type) => {
+const sendMessage = async (data: sendMessageInterface, type: 'queue' | 'no_queue') => {
     const messageData = data;
 
     if(type === 'queue'){

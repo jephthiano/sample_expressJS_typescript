@@ -1,6 +1,6 @@
-import { Otp } from "#src/types/interface.js";
+import { UpdateOtpInterface } from "#src/types/interface.js";
 
-function createOtpDTO(data) {
+function createOtpDTO(data: UpdateOtpInterface) {
 
     return {
         receiving_medium: data.receiving_medium?.trim().toLowerCase(),
