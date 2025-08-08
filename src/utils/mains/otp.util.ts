@@ -36,7 +36,7 @@ const verifyNewOtp = async (data) => {
     if(!isOtpCorrect) triggerError("Incorrect otp code", [], 401);
 
     // update otp status to used
-    if(!await updateOtpStatus({ receiving_medium, use_case, code })) triggerError("Error occurred while running request", [], 500); // Indicating an internal error occurred
+    if(!await updateOtpStatus({ receiving_medium, use_case, code })) triggerError("Error occurred while running request", [], 500);
     
     // Check if the OTP has expired (300 seconds = 5 minutes)
     if(isDateLapsed(reg_date, process.env.OTP_EXPIRY)) triggerError("Otp code has expired", []);

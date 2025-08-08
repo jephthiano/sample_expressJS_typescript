@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { log } from '#main_util/logger.util.js'; // adjust if your alias or path differs
+import { getEnvorThrow } from '#src/utils/mains/general.util.js';
 
 
 const logInfo = (type: string, data: string) => log(type, data, 'info');
@@ -7,11 +8,8 @@ const logError = (type: string, data: string) => log(type, data, 'error');
 
 const connectDB = async () => {
     try {
-        const uri = process.env.MONGODB_URI;
-        if (!uri) {
-            logError("DATABASE CONFIG", `MONGODB_URI is not set in defined`);
-            throw new Error('Error occured on the server.');
-        }
+        const uri = getEnvorThrow("MONGODB_URI");
+        
         const conn = await mongoose.connect(uri);
 
         logInfo("DATABASE CONFIG", `✅ Database connected: ${conn.connection.host}`);

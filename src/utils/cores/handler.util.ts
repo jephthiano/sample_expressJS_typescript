@@ -59,7 +59,7 @@ function handleException(res, error) {
 /**
  * Throw a generic API exception (default 403).
  */
-function triggerError(message, details = [], statusCode = 403) {
+function triggerError(message, details = [], statusCode = 403): never {
   throw new CustomApiException(message, statusCode, details);
 }
 

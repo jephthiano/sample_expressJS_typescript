@@ -1,3 +1,5 @@
+import { triggerError } from "../cores/handler.util.js";
+
 const initialResponse = (type = 'invalid_request') => ({
     status: false,
     message: type === 'invalid_input' ? 'invalid inputs' : 'invalid request',
@@ -6,21 +8,28 @@ const initialResponse = (type = 'invalid_request') => ({
     error_data: {},
 });
 
-const isEmptyObject = (obj) => Object.keys(obj).length === 0;
+const getEnvorThrow = (key: string): string => {
+    const val = process.env[key];
+    if (!val) triggerError(`Environment variable ${key} is not defined.`, [], 500);
+    
+    return val;
+}
 
-const isEmptyArray = (array) => Array.isArray(array) && array.length === 0;
+const isEmptyObject = (obj: {}) => Object.keys(obj).length === 0;
 
-const isObject = (value) => typeof value === 'object' && value !== null && !Array.isArray(value);
+const isEmptyArray = (array: []) => Array.isArray(array) && array.length === 0;
 
-const isKeyInObject = (key, object) => Object.prototype.hasOwnProperty.call(object, key);
+const isObject = (value: any) => typeof value === 'object' && value !== null && !Array.isArray(value);
 
-const isEmptyString = (variable) => typeof variable === 'string' && variable.trim().length === 0;
+const isKeyInObject = (key: any, object: {}) => Object.prototype.hasOwnProperty.call(object, key);
 
-const inArray = (value, array) => array.includes(value);
+const isEmptyString = (variable: string) => typeof variable === 'string' && variable.trim().length === 0;
 
-const isValidData = (data) => !(data === undefined || data === null || data === '');
+const inArray = (value: any, array []) => array.includes(value);
 
-const isPhoneSample = (value) => /^0?\d*$/.test(value.trim());
+const isValidData = (data: any) => !(data === undefined || data === null || data === '');
+
+const isPhoneSample = (value: any) => /^0?\d*$/.test(value.trim());
 
 const detectInputType = (value) => {
     // Looks like a phone number if it starts with digits (even with leading zero)
@@ -56,6 +65,7 @@ const parseMessageToObject = (error) => {
 };
 
 export {
+    getEnvorThrow,
     initialResponse,
     isEmptyObject,
     isEmptyArray,
