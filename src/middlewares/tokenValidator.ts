@@ -1,10 +1,11 @@
+import { NextFunction, Request, Response } from 'express';
 import { validateApiToken } from '#main_util/token.util.js';
 import { handleException, triggerError} from '#core_util/handler.util.js';
 import { findUserByID } from '#database/mongo/user.db.js';
 
 
 // Middleware to verify token and attach user data to `req`
-const tokenValidator = async (req, res, next) => {
+const tokenValidator = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = await validateApiToken(req);
         if(!userId) triggerError('Invalid request', [], 401);
