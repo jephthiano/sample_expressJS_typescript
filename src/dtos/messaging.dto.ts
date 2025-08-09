@@ -1,6 +1,6 @@
 import { ucFirst }  from '#main_util/general.util.js';
-import { htmlEmailInterface, sendMessageInterface } from '#src/types/interface.js';
-import { sendMessageType } from '#src/types/types.js';
+import type { htmlEmailInterface, sendMessageInterface } from '#src/types/interface.js';
+import type { sendMessageType } from '#src/types/types.js';
 
 // pass [first_name, receiving_medium, send_medium, type and misc]
 function sendMessageDTO(data: sendMessageInterface) {

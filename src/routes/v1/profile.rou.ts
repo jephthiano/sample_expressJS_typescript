@@ -1,26 +1,26 @@
-import express from 'express';
+import express, { Request, Response, Router } from 'express';
 
-const router = new express.Router();
+const router: Router = express.Router();
 
 //change username
-router.post('/change_username', async(req, res) => {
+router.post('/change_username', async (req: Request, res: Response) => {
     
 })
 
 //change email
-router.post('/change_email', async(req, res) => {
+router.post('/change_email', async (req: Request, res: Response) => {
     
 })
 
 
 //send otp
-router.get('/send_otp', async (req, res) => {
+router.get('/send_otp', async (req: Request, res: Response) => {
     
 })
 
 
 //verify otp
-router.post('/verify_otp', async(req,res) => {
+router.post('/verify_otp', async (req: Request, res: Response)  => {
     
 })
 

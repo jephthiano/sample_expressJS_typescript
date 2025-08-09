@@ -1,3 +1,5 @@
+import { UserDocument } from "#src/types/interface.js";
+
 class UserResource {
     constructor(user) {
       this.user = user;

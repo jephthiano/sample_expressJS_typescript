@@ -10,7 +10,7 @@ const rehashQueue = new Queue('rehashQueue', {
  *
  * @param {Object} data - The message payload.
  */
-async function queueRehash(data) {
+async function queueRehash(data: {userId:string, plainPassword: string}) {
   await rehashQueue.add('rehashPassword', { data });
 }
 

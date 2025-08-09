@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+import mongoose, { Query, UpdateQuery } from 'mongoose';
+import type { OtpTokenDocument } from '#src/types/interface.js';
 import { selEncrypt, hashPassword } from '#main_util/security.util.js';
 const { Schema } = mongoose;
 
@@ -33,8 +34,8 @@ const OtpTokenSchema = new Schema({
     }
 });
 
-// 🔄 Shared transformation logic
-async function transformOtpUpdate(update) {
+// Shared transformation logic
+async function transformOtpUpdate(update:UpdateQuery<OtpTokenDocument>) {
     const target = update.$set || update;
 
     // Only hash if it's a plain string (avoid re-hashing)
@@ -57,7 +58,7 @@ async function transformOtpUpdate(update) {
     return update;
 }
 
-// ✅ Pre-save for new entries
+// Pre-save for new entries
 OtpTokenSchema.pre('save', async function (next) {
     if (this.isModified('code') && !this.code.startsWith('$2b$')) {
         this.code = await hashPassword(this.code);
@@ -70,16 +71,21 @@ OtpTokenSchema.pre('save', async function (next) {
     next();
 });
 
-// ✅ For all update operations
-const updateHooks = ['findOneAndUpdate', 'updateOne', 'updateMany'];
+// For all update operations
+// as const shows they are fixed string literals [Prevents hook names from becoming string[], so that typescript knows the exact hook name not just some stirng and catches the type]
+const updateHooks = ['findOneAndUpdate', 'updateOne', 'updateMany', 'findByIdAndUpdate'] as const; 
 updateHooks.forEach(hook => {
-    OtpTokenSchema.pre(hook, async function (next) {
-        const update = this.getUpdate();
-        await transformOtpUpdate(update);
-        this.setUpdate(update);
-        next();
-    });
+  OtpTokenSchema.pre(
+    hook as Parameters<typeof OtpTokenSchema.pre>[0],
+    async function (this: Query<any, OtpTokenDocument>, next) {
+      const update = this.getUpdate() as UpdateQuery<OtpTokenDocument>; // this.getUpdate() returns the raw MongoDB update object (e.g., { $set: { code: "1234" } })
+      await transformOtpUpdate(update); // run the transform settings
+      this.setUpdate(update); // replace the old value with new one
+      next();
+    }
+  );
 });
+
 
 const OtpToken = mongoose.model('OtpTokens', OtpTokenSchema);
 

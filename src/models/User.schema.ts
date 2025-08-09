@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+import mongoose, { Query, UpdateQuery } from 'mongoose';
+import type { UserDocument } from '#src/types/interface.js';
 import { hashPassword, selEncrypt, generateUniqueId } from '#main_util/security.util.js';
 const { Schema } = mongoose;
 
@@ -78,7 +79,7 @@ const UserSchema = new Schema({
 });
 
 // Reusable transformer for update objects
-async function transformUserUpdate(update) {
+async function transformUserUpdate(update: UpdateQuery<UserDocument>) {
     const target = update.$set || update;
 
     if (target.password) target.password = await hashPassword(target.password);
@@ -108,24 +109,28 @@ UserSchema.pre('save', async function (next) {
     if (this.isModified('last_name')) this.last_name = selEncrypt(this.last_name.toLowerCase(), 'last_name');
     if (this.isModified('password')) this.password = await hashPassword(this.password);
 
-    if (!this.user_account) {
-        this.user_account = { balance: "0" };
-    }
+    // if (!this.user_account) {
+    //     this.user_account = { balance: "0" };
+    // }
 
     next();
 });
 
 
 // Update hooks
-const updateHooks = ['findOneAndUpdate', 'updateOne', 'updateMany', 'findByIdAndUpdate'];
-
-updateHooks.forEach((hook) => {
-    UserSchema.pre(hook, async function (next) {
-        const update = this.getUpdate();
-        await transformUserUpdate(update);
-        this.setUpdate(update);
-        next();
-    });
+// For all update operations
+// as const shows they are fixed string literals [Prevents hook names from becoming string[], so that typescript knows the exact hook name not just some stirng and catches the type]
+const updateHooks = ['findOneAndUpdate', 'updateOne', 'updateMany', 'findByIdAndUpdate'] as const; 
+updateHooks.forEach(hook => {
+  UserSchema.pre(
+    hook as Parameters<typeof UserSchema.pre>[0],
+    async function (this: Query<any, UserDocument>, next) {
+      const update = this.getUpdate() as UpdateQuery<UserDocument>; // this.getUpdate() returns the raw MongoDB update object (e.g., { $set: { code: "1234" } })
+      await transformUserUpdate(update); // run the transform settings
+      this.setUpdate(update); // replace the old value with new one
+      next();
+    }
+  );
 });
 
 

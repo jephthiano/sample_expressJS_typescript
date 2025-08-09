@@ -11,7 +11,6 @@ class AuthController extends BaseController{
     // LOGIN
     static async login(req: Request, res: Response) {
         try {
-
             // Validate inputs using Joi DTO
             const { error, value } = loginJoi.validate(req.body, { abortEarly: false });
             if (error) this.triggerValidationError(parseMessageToObject(error));
@@ -27,7 +26,7 @@ class AuthController extends BaseController{
     // REGISTER
     static async register(req: Request, res: Response) {
         try {
-            //validate inputs
+            //validate inputs (custome)
             const { status, data } = await register(req.body, 'single');
             if (status) this.triggerValidationError(data);
 

@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+import mongoose, { Query, UpdateQuery } from 'mongoose';
+import type { TokenDocument } from '#src/types/interface.js';
 import { selEncrypt } from '#main_util/security.util.js';
 const { Schema } = mongoose;
 
@@ -27,7 +28,7 @@ const TokenSchema = new Schema({
     }
 });
 
-async function transformUserUpdate(update) {
+async function transformTokenUpdate(update: UpdateQuery<TokenDocument>) {
     const target = update.$set || update;
 
     if (target.token) {
@@ -49,13 +50,19 @@ TokenSchema.pre('save', async function (next) {
     next();
 });
 
-['findOneAndUpdate', 'updateOne', 'updateMany', 'findByIdAndUpdate'].forEach(hook => {
-    TokenSchema.pre(hook, async function (next) {
-        const update = this.getUpdate();
-        await transformUserUpdate(update);
-        this.setUpdate(update);
-        next();
-    });
+// For all update operations
+// as const shows they are fixed string literals [Prevents hook names from becoming string[], so that typescript knows the exact hook name not just some stirng and catches the type]
+const updateHooks = ['findOneAndUpdate', 'updateOne', 'updateMany', 'findByIdAndUpdate'] as const; 
+updateHooks.forEach(hook => {
+  TokenSchema.pre(
+    hook as Parameters<typeof TokenSchema.pre>[0],
+    async function (this: Query<any, TokenDocument>, next) {
+      const update = this.getUpdate() as UpdateQuery<TokenDocument>; // this.getUpdate() returns the raw MongoDB update object (e.g., { $set: { code: "1234" } })
+      await transformTokenUpdate(update); // run the transform settings
+      this.setUpdate(update); // replace the old value with new one
+      next();
+    }
+  );
 });
 
 const Token = mongoose.model('tokens', TokenSchema);

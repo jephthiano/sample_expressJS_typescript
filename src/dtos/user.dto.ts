@@ -1,5 +1,5 @@
 import { validateInput }  from '#main_util/security.util.js';
-import { CreateUserInterface, ResetPasswordInterface } from '#src/types/interface.js';
+import type { CreateUserInterface, ResetPasswordInterface } from '#src/types/interface.js';
 
 function createUserDTO(data: CreateUserInterface) {
     const veriType = data.receiving_medium 

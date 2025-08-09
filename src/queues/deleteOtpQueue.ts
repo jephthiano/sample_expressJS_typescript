@@ -10,8 +10,8 @@ const deleteOtpQueue = new Queue('deleteOtpQueue', {
  *
  * @param {Object} data - The message payload.
  */
-async function queueDeleteOtp(data) {
-  await deleteOtpQueue.add('deleteOtp', { data });
+async function queueDeleteOtp(receiving_medium: string) {
+  await deleteOtpQueue.add('deleteOtp', { receiving_medium });
 }
 
 export { queueDeleteOtp };

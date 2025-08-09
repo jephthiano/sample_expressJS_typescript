@@ -1,8 +1,9 @@
-import { messageMediumType, sendMessageType } from "./types.js";
+import { Document } from 'mongoose';
+import { messageMediumType, sendMessageType, otpUseCase } from "./types.ts";
 
 interface UpdateOtpInterface {
   receiving_medium: string;
-  use_case: 'signup' | 'forgot_password';
+  use_case: otpUseCase;
   code: string;
 };
 
@@ -43,11 +44,49 @@ interface ResetPasswordInterface {
     confirm_password: string;
 }
 
+
+interface OtpTokenDocument extends Document {
+    code: string;
+    receiving_medium: string;
+    use_case:string,
+    status: string,
+    reg_date: Date;
+}
+
+interface TokenDocument extends Document {
+    user_id: string;
+    token: string;
+    expire_at: Date;
+    created_at: Date;
+}
+
+interface UserDocument extends Document {
+    unique_id: string;
+    email: string;
+    mobile_number: string;
+    username: string;
+    first_name: string;
+    last_name: string;
+    password: string;
+    role: string;
+    user_level: number;
+    gender: string;
+    dob: string;
+    address: {};
+    created_at: Date;
+    email_verified_at: Date;
+    mobile_number_verified_at: Date;
+}
+
+
 export { 
     SendOtpInterface, 
     UpdateOtpInterface, 
     sendMessageInterface,
     htmlEmailInterface,
     CreateUserInterface, 
-    ResetPasswordInterface 
+    ResetPasswordInterface,
+    OtpTokenDocument,
+    TokenDocument,
+    UserDocument,
 };

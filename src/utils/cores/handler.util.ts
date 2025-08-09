@@ -1,9 +1,11 @@
+import { Response } from 'express';
+
 import { ValidationError, CustomApiException } from '#core_util/errors.util.js';
 
 /**
  * Send a standardized JSON response.
  */
-function sendResponse(res, data = {}, message = "OK", status = true, error = [], statusCode = 200) {
+function sendResponse(res: Response, data: {} = {}, message:string = "OK", status:boolean | string = true, error:{}[] = [], statusCode:number = 200) {
   return res.status(statusCode).json({
     status,
     message,
@@ -16,20 +18,7 @@ function sendResponse(res, data = {}, message = "OK", status = true, error = [],
  * Centralized exception handler.  
  * ValidationError, DB errors, and CustomApiException.
  */
-function handleException(res, error) {
-
-  // Defensive null/undefined check
-  // if (!error || typeof error !== 'object') {
-  
-  //   return sendResponse(
-  //     res,
-  //     {},
-  //     'An unknown error occurred',
-  //     false,
-  //     process.env.NODE_ENV === 'development' ? [{ error: String(error) }] : [],
-  //     500
-  //   );
-  // }
+function handleException(res: Response, error) {
 
   // for validation error
   if (error instanceof ValidationError) {
@@ -59,19 +48,19 @@ function handleException(res, error) {
 /**
  * Throw a generic API exception (default 403).
  */
-function triggerError(message, details = [], statusCode = 403): never {
+function triggerError(message: string, details:{} = {}, statusCode:number = 403): never {
   throw new CustomApiException(message, statusCode, details);
 }
 
 /**
  * Throw a validation exception (422).
  */
-function triggerValidationError(details = []) {
+function triggerValidationError(details:{} = {}) {
   throw new ValidationError(details);
 }
 
-function returnNotFound(res, message='Not Found') {
-  sendResponse(res, {}, message, false, 404);
+function returnNotFound(res: Response, message='Not Found') {
+  sendResponse(res, {}, message, false, [], 404);
 }
 
 export {

@@ -1,12 +1,13 @@
-import express from 'express';
+import express, { Request, Response, Router } from 'express';
 import { sendMessage } from '#main_util/messaging.util.js';
 import { hashPassword } from '#main_util/security.util.js';
+import type { sendMessageInterface } from '#src/types/interface.js';
 
-const router = new express.Router();
+const router: Router = express.Router();
 
-router.get('/messaging', async (req,res) => {
+router.get('/messaging', async (req: Request, res: Response) => {
     // for email
-    // const messageData = {
+    // const messageData: sendMessageInterface = {
     //     first_name: 'Jephthaooh',
     //     receiving_medium: 'jephthahooh@gmail.com',
     //     type: 'welcome',
@@ -14,7 +15,7 @@ router.get('/messaging', async (req,res) => {
     // };
 
     // for whatsapp
-    // const messageData = {
+    // const messageData: sendMessageInterface = {
     //     first_name: 'Jephthaooh',
     //     receiving_medium: '07047474438',
     //     type: 'welcome',
@@ -22,7 +23,7 @@ router.get('/messaging', async (req,res) => {
     // };
 
     // for sms notification
-    // const messageData = {
+    // const messageData: sendMessageInterface = {
     //     first_name: 'Jephthaooh',
     //     receiving_medium: '07047474438',
     //     type: 'welcome',
@@ -30,7 +31,7 @@ router.get('/messaging', async (req,res) => {
     // };
 
     // for push notification
-    const messageData = {
+    const messageData: sendMessageInterface  = {
         first_name: 'Jephthaooh',
         receiving_medium: 'dfgvghvgvgdv',
         type: 'welcome',
@@ -41,7 +42,7 @@ router.get('/messaging', async (req,res) => {
     res.status(200).json({message:'working'});
 });
 
-router.get('/hash', async (req,res) => {
+router.get('/hash', async (req: Request, res: Response) => {
     const hash = await hashPassword('newPAss')
 });
 
