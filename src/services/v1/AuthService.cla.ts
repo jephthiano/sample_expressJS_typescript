@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import AuthRepository from '#repository/AuthRepository.cla.js';
 import FetchController from '#controller/v1/FetchController.cla.js';
 import { verifyPassword, validateInput }  from '#main_util/security.util.js';
@@ -10,7 +11,7 @@ import { triggerError} from '#core_util/handler.util.js';
 class AuthService{
 
     // LOGIN
-    static async login(req) {
+    static async login(req: Request) {
         const { login_id, password } = req.body;
 
         // Get user data by login ID
@@ -30,7 +31,7 @@ class AuthService{
     }
 
     // REGISTER
-    static async register(req) {
+    static async register(req: Request) {
         const { first_name, email } = req.body;
 
         // Create user
@@ -45,7 +46,7 @@ class AuthService{
     }
 
     // [SEND OTP]
-    static async sendOtp(req, type) {
+    static async sendOtp(req: Request, type) {
         const { receiving_medium } = req.body;
 
         const data = {
@@ -63,7 +64,7 @@ class AuthService{
     }
 
     // [VERIFY OTP]
-    static async verifyOtp(req, type) {
+    static async verifyOtp(req: Request, type) {
         const data = {
             receiving_medium: req.body.receiving_medium,
             code: req.body.code,
@@ -75,7 +76,7 @@ class AuthService{
         return [];
     }
 
-    static async signup(req) {
+    static async signup(req: Request) {
         const { receiving_medium, code, first_name, email } = req.body;
     
         const verifyOtp = await verifyUsedOtp({ receiving_medium, use_case: 'sign_up', code });
@@ -94,7 +95,7 @@ class AuthService{
     }
 
     //FORGOT PASSWORD [RESET PASSWORD]
-    static async resetPassword(req) {
+    static async resetPassword(req: Request) {
         const { code, receiving_medium } = req.body;
         const verifyOtp = await verifyUsedOtp({ receiving_medium, use_case: 'forgot_password', code }); 
 
@@ -119,7 +120,7 @@ class AuthService{
     }
     
 
-    static async logout(req) {
+    static async logout(req: Request) {
         const response = await deleteApiToken(req);
         if(!response) triggerError("Request failed, try again", [], 500)
 

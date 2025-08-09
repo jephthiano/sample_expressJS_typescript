@@ -1,3 +1,4 @@
+import { Document } from 'mongoose';
 interface CreateUserInterface {
     receiving_medium?: string;
     code?: string;
@@ -37,7 +38,7 @@ interface UserDocumentInterface extends Document {
 }
 
 interface UserModelInterface extends UserDocumentInterface {
-    _id: string;    
+    _id: string;
 }
 
 interface UserResourceInterface {
