@@ -1,5 +1,5 @@
 import mongoose, { Query, UpdateQuery } from 'mongoose';
-import type { UserDocument } from '#src/types/interface.js';
+import type { UserDocumentInterface } from '#src/types/user/interface.js';
 import { hashPassword, selEncrypt, generateUniqueId } from '#main_util/security.util.js';
 const { Schema } = mongoose;
 
@@ -79,7 +79,7 @@ const UserSchema = new Schema({
 });
 
 // Reusable transformer for update objects
-async function transformUserUpdate(update: UpdateQuery<UserDocument>) {
+async function transformUserUpdate(update: UpdateQuery<UserDocumentInterface>) {
     const target = update.$set || update;
 
     if (target.password) target.password = await hashPassword(target.password);
@@ -124,8 +124,8 @@ const updateHooks = ['findOneAndUpdate', 'updateOne', 'updateMany', 'findByIdAnd
 updateHooks.forEach(hook => {
   UserSchema.pre(
     hook as Parameters<typeof UserSchema.pre>[0],
-    async function (this: Query<any, UserDocument>, next) {
-      const update = this.getUpdate() as UpdateQuery<UserDocument>; // this.getUpdate() returns the raw MongoDB update object (e.g., { $set: { code: "1234" } })
+    async function (this: Query<any, UserDocumentInterface>, next) {
+      const update = this.getUpdate() as UpdateQuery<UserDocumentInterface>; // this.getUpdate() returns the raw MongoDB update object (e.g., { $set: { code: "1234" } })
       await transformUserUpdate(update); // run the transform settings
       this.setUpdate(update); // replace the old value with new one
       next();

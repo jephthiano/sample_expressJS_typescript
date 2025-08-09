@@ -60,24 +60,6 @@ interface TokenDocument extends Document {
     created_at: Date;
 }
 
-interface UserDocument extends Document {
-    unique_id: string;
-    email: string;
-    mobile_number: string;
-    username: string;
-    first_name: string;
-    last_name: string;
-    password: string;
-    role: string;
-    user_level: number;
-    gender: string;
-    dob: string;
-    address: {};
-    created_at: Date;
-    email_verified_at: Date;
-    mobile_number_verified_at: Date;
-}
-
 
 export { 
     SendOtpInterface, 
@@ -88,5 +70,4 @@ export {
     ResetPasswordInterface,
     OtpTokenDocument,
     TokenDocument,
-    UserDocument,
 };
