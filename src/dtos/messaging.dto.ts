@@ -1,10 +1,10 @@
 import { ucFirst }  from '#main_util/general.util.js';
-import type { htmlEmailInterface, sendMessageInterface } from '#src/types/interface.js';
-import type { sendMessageType } from '#src/types/types.js';
+import type { htmlEmailInterface, sendMessageInterface } from '#src/types/messaging/interface.js';
+import type { sendMessageType, messageMediumType } from '#src/types/messaging/types.js';
 
 // pass [first_name, receiving_medium, send_medium, type and misc]
 function sendMessageDTO(data: sendMessageInterface) {
-    const send_medium = data.send_medium || 'email';
+    const send_medium: messageMediumType = data.send_medium || 'email';
     
     const match = {
         email: () => emailDTO(data),

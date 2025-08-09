@@ -2,8 +2,8 @@ import { findSingleValue } from '#database/mongo/general.db.js';
 import User from '#model/User.schema.js';
 import { selEncrypt, selDecrypt }  from '#main_util/security.util.js';
 import { createUserDTO, updatePasswordDTO } from '#dto/user.dto.js';
-import type { modelName } from '#src/types/types.js';
-import type { CreateUserInterface, ResetPasswordInterface } from '#src/types/interface.js';
+import type { ModelName } from '#src/types/general/types.js';
+import type { CreateUserInterface, ResetPasswordInterface } from '#src/types/user/interface.js';
 
 const findUserByID = async (userId: string) => {
     return await User.findOne({ _id: userId});
@@ -25,11 +25,11 @@ const findEmailMobileNumberUsername = async(email: string, mobile_number: string
         ]);
 }
 
-const findUserSingleValue = async (model: modelName, checkField: string, checkValue: string, returnField: string) => {
+const findUserSingleValue = async (model: ModelName, checkField: string, checkValue: string, returnField: string) => {
     return await findSingleValue(model, checkField, checkValue, returnField);
 }
 
-const findUserSingleValuebyEncField = async (model: modelName, checkField: string, checkValue: string, returnField: string) => {
+const findUserSingleValuebyEncField = async (model: ModelName, checkField: string, checkValue: string, returnField: string) => {
     checkField = selEncrypt(checkValue, checkField);
     return await findSingleValue(model, checkField, checkValue, returnField);
 }

@@ -1,6 +1,6 @@
 import { Queue } from 'bullmq';
 import { redis } from '#config/redis.js'; 
-import type { sendMessageInterface } from '#src/types/interface.js';
+import type { sendMessageInterface } from '#src/types/messaging/interface.js';
 
 const messagingQueue = new Queue('messagingQueue', {
   connection: redis.duplicate(), // ensures a clean connection for the Queue

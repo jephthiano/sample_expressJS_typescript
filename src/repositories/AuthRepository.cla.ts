@@ -1,5 +1,5 @@
 import { findUserByEmailOrPhone, createUserAccount, resetUserPaswword } from '#database/mongo/user.db.js';
-import type  { CreateUserInterface, ResetPasswordInterface } from '#src/types/interface.js';
+import type  { CreateUserInterface, ResetPasswordInterface } from '#src/types/user/interface.js';
 
 class AuthRepository
 {

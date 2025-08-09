@@ -2,10 +2,10 @@ import User from '#model/User.schema.js';
 import OtpToken from '#model/OtpToken.schema.js';
 import Token from '#model/Token.schema.js';
 import { triggerError} from '#core_util/handler.util.js';
-import type { modelName } from '#src/types/types.js';
+import type { ModelName } from '#src/types/general/types.js';
 
 
-const findSingleValue = async (collectionName: modelName, whereField: string, whereValue: string, selectValue: string):Promise<string | null> => {
+const findSingleValue = async (collectionName: ModelName, whereField: string, whereValue: string, selectValue: string):Promise<string | null> => {
     const model = getModel(collectionName); // Get model dynamically
     if (!model) triggerError(`Error occured on the server`,[], 500);    
 
@@ -15,7 +15,7 @@ const findSingleValue = async (collectionName: modelName, whereField: string, wh
     return response;
 };
 
-const updateSingleField = async (collectionName: modelName, whereField: string, whereValue: string, updateField: string, newValue: string): Promise<boolean> => {
+const updateSingleField = async (collectionName: ModelName, whereField: string, whereValue: string, updateField: string, newValue: string): Promise<boolean> => {
     const model = getModel(collectionName); // dynamically resolve the Mongoose model
     if (!model) triggerError(`Error occured on the server`,[], 500);
 
@@ -29,9 +29,9 @@ const updateSingleField = async (collectionName: modelName, whereField: string, 
 
 import type { Model } from 'mongoose';
 
-const getModel = (modelName: modelName): Model<any> | null => {
-    const models: Record<modelName, Model<any>> = { User, OtpToken, Token };
-    return models[modelName] || null;
+const getModel = (ModelName: ModelName): Model<any> | null => {
+    const models: Record<ModelName, Model<any>> = { User, OtpToken, Token };
+    return models[ModelName] || null;
 };
 
 

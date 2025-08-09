@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from 'express';
 import { sendMessage } from '#main_util/messaging.util.js';
 import { hashPassword } from '#main_util/security.util.js';
-import type { sendMessageInterface } from '#src/types/interface.js';
+import type { sendMessageInterface } from '#src/types/messaging/interface.js';
 
 const router: Router = express.Router();
 
