@@ -18,7 +18,7 @@ const tokenValidator = async (req: Request, res: Response, next: NextFunction) =
         if (user.status === 'suspended') triggerError('You have been suspended, contact admin', [], 401);
         
         // Attach data to request object
-        req.user = user;
+        req.user = user; // type fix in (types/index.d.ts)
         
         next(); // Proceed to next middleware
     } catch (err) {
