@@ -1,10 +1,13 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { getEnvorThrow } from '#src/utils/mains/general.util.js';
+import { triggerError } from '#src/utils/cores/handler.util.js';
 
-const tokenExpiry = parseInt(process.env.TOKEN_EXPIRY); // default to 1 hour
-const jwtSecret = process.env.JWT_SECRET_KEY;
+const tokenExpiry = getEnvorThrow('TOKEN_EXPIRY') ; // default to 1 hour
+const jwtSecret = getEnvorThrow('JWT_SECRET_KEY');
+const threshold = getEnvorThrow('THRESHOLD');
 
 
-const createJwtToken = async (userId) => {
+const createJwtToken = async (userId: string) => {
     const token = jwt.sign(
         { userId },
         jwtSecret,
@@ -14,21 +17,31 @@ const createJwtToken = async (userId) => {
     return token ?? null;
 }
 
-const renewJwtToken = async (token) => {
-    const decoded = jwt.verify(token, jwtSecret,);
-    const userId = decoded?.id;
+const renewJwtToken = async (token: string): Promise<string> => {
+    const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
+
+    const userId = decoded.id as string | undefined;
+    if (!userId) triggerError('Error occurred on the server', [], 500);
 
     const now = Math.floor(Date.now() / 1000); // current time in seconds
-    const timeLeft = decoded.exp - now;
+    const timeLeft = (decoded.exp ?? 0) - now;
 
-    return timeLeft <= process.env.THRESHOLD ? createJwtToken(userId) : token;
-}
+    // Threshold should be a number representing seconds before expiry to renew
+    return timeLeft <= parseInt(threshold) ? createJwtToken(userId) : token;
+
+};
+
+const validateJwtToken = async (token: string): Promise<string | null> => {
+
+    const decoded = jwt.verify(token, jwtSecret) as JwtPayload | string;
+
+    if (typeof decoded === 'string') return null;
+
+    return decoded.userId ?? null;
 
 
-const validateJwtToken = async (token) =>{
-    const decoded = jwt.verify(token, jwtSecret,);
-        return decoded?.userId ?? null;
-}
+};
+
 
 export {
     createJwtToken,
