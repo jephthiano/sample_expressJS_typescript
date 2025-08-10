@@ -1,14 +1,20 @@
-import { Document } from 'mongoose';
+import { Document, ObjectId, Model } from 'mongoose';
 
-
-interface TokenDocument extends Document {
-    user_id: string;
-    token: string;
-    expire_at: Date;
-    created_at: Date;
+interface TokenAttrs {
+  user_id: string;
+  token: string;
+  expire_at: TokenUseCase;
+  created_at: TokenStatus;
 }
 
+interface TokenDocument extends TokenAttrs, Document {
+  _id: ObjectId | string;
+}
+
+interface TokenModel extends Model<TokenDocument> {
+  build(attrs: TokenAttrs): TokenDocument;
+}
 
 export { 
-    TokenDocument,
+    TokenAttrs,
 };

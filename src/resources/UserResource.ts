@@ -1,10 +1,10 @@
-import type { UserModelInterface, UserResourceInterface } from "#src/types/user/interface.js";
+import type { UserDocument, UserResourceInterface } from "#src/types/user/interface.js";
 
 
 class UserResource {
-  user: UserModelInterface;
+  user: UserDocument;
 
-  constructor(user: UserModelInterface) {
+  constructor(user: UserDocument) {
     this.user = user;
   }
 
@@ -29,7 +29,7 @@ class UserResource {
     };
   }
 
-  static collection(users: UserModelInterface[]): ReturnType<UserResource['toJSON']>[] {
+  static collection(users: UserDocument[]): ReturnType<UserResource['toJSON']>[] {
     return users.map(user => new UserResource(user).toJSON());
   }
 }

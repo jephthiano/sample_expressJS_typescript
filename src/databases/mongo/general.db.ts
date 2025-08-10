@@ -1,3 +1,4 @@
+import type { Model } from 'mongoose';
 import User from '#model/User.schema.js';
 import OtpToken from '#model/OtpToken.schema.js';
 import Token from '#model/Token.schema.js';
@@ -27,12 +28,9 @@ const updateSingleField = async (collectionName: ModelName, whereField: string, 
     return result ? result.modifiedCount > 0 : false; 
 };
 
-import type { Model } from 'mongoose';
-
-const getModel = (ModelName: ModelName): Model<any> | null => {
-    const models: Record<ModelName, Model<any>> = { User, OtpToken, Token };
-    return models[ModelName] || null;
+const getModel = (ModelName: ModelName): any => {
+  const models = { User, OtpToken, Token };
+  return models[ModelName] || null;
 };
-
 
 export { findSingleValue, updateSingleField };

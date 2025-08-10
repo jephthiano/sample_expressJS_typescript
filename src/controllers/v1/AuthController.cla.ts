@@ -4,6 +4,7 @@ import AuthService from '#service/v1/AuthService.cla.js';
 import { register, sendOtp, verifyOtp, signup, resetPassword} from '#validator_util/custom/auth.val.js';
 import { loginJoi } from '#validator_util/joi/auth.joi.js';
 import { parseMessageToObject } from '#main_util/general.util.js';
+import { otpUseCase } from '#src/types/otp/types.js';
 
 
 class AuthController extends BaseController{
@@ -40,10 +41,10 @@ class AuthController extends BaseController{
 
     // SEND OTP
     static async sendOtp(req: Request, res: Response) {
-        const { type } = req.params;
+        const type = req.params.type as otpUseCase;
 
         try {
-            if(type !== 'sign_up' && type !== 'forgot_password') this.triggerError("Invalid Request", []);
+            if (!['sign_up', 'forgot_password'].includes(type)) this.triggerError("Invalid Request", []);
 
             //validate inputs
             const { status, data } = await sendOtp(req.body, type);
@@ -59,10 +60,10 @@ class AuthController extends BaseController{
 
     // VERIFY OTP
     static async verifyOtp(req: Request, res: Response) {
-        const { type } = req.params;
+        const type = req.params.type as otpUseCase;
 
         try {
-            if (type !== 'sign_up' && type !== 'forgot_password') this.triggerError("Invalid Request", []);
+            if (!['sign_up', 'forgot_password'].includes(type)) this.triggerError("Invalid Request", []);
 
             // validate inputs
             const { status, data } = await verifyOtp(req.body);
@@ -95,7 +96,7 @@ class AuthController extends BaseController{
     static async resetPassword(req: Request, res: Response) {
         try {
             //validate inputs
-            const { status, data } = await resetPassword(req.body);
+            const { status, data } = resetPassword(req.body);
             if (status) this.triggerValidationError(data);
 
            const response  =  await AuthService.resetPassword(req) ?? {};

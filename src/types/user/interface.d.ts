@@ -1,4 +1,32 @@
-import { Document } from 'mongoose';
+import { Document, ObjectId, Model } from 'mongoose';
+
+//fields needed to be created
+interface UserAttrs {
+  email: string;
+  mobile_number: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  password: string;
+  role: 'user' | 'admin';
+  status: 'active' | 'suspended';
+  user_level: number;
+  gender: 'male' | 'female';
+  dob: string;
+  address: Record<string, any>;
+  created_at: Date;
+  email_verified_at: Date | null;
+  mobile_number_verified_at: Date | null;
+  unique_id?: string;
+}
+
+interface UserDocument extends UserAttrs, Document {
+  _id: ObjectId | string;
+}
+
+interface UserModel extends Model<UserDocument> {
+  build(attrs: UserAttrs): UserDocument;
+}
 
 interface LoginInterface {
   login_id: string;
@@ -46,28 +74,11 @@ interface ResetPasswordInterface {
     confirm_password: string;
 }
 
-interface UserDocumentInterface extends Document {
-    unique_id: string;
-    email: string;
-    mobile_number: string;
-    username: string;
-    first_name: string;
-    last_name: string;
-    password: string;
-    role: string;
-    status: string;
-    user_level: number;
-    gender: string;
-    dob: string;
-    address: {};
-    created_at: Date;
-    email_verified_at: Date;
-    mobile_number_verified_at: Date;
+interface ResetPasswordResponseInterface {
+    email: string, 
+    first_name: string
 }
 
-interface UserModelInterface extends UserDocumentInterface {
-    _id: string;
-}
 
 interface UserResourceInterface {
     id: string;
@@ -84,18 +95,20 @@ interface UserResourceInterface {
     dob: string;
     address: {};
     created_at: Date;
-    email_verified_at: Date;
-    mobile_number_verified_at: Date;
+    email_verified_at?: Date;
+    mobile_number_verified_at?: Date;
 }
 
 
 export { 
+    UserAttrs,
+    UserModel,
+    UserDocument,
     LoginInterface,
     RegsiterInterface,
     SignupInputInterface,
     CreateUserInterface, 
     ResetPasswordInterface,
-    UserDocumentInterface,
-    UserModelInterface,
+    ResetPasswordResponseInterface,
     UserResourceInterface,
 };

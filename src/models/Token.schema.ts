@@ -1,5 +1,5 @@
 import mongoose, { Query, UpdateQuery } from 'mongoose';
-import type { TokenDocument } from '#src/types/otp_token/interface.js';
+import type { TokenAttrs } from '#src/types/otp_token/interface.js';
 import { selEncrypt } from '#main_util/security.util.js';
 const { Schema } = mongoose;
 
@@ -28,7 +28,7 @@ const TokenSchema = new Schema({
     }
 });
 
-async function transformTokenUpdate(update: UpdateQuery<TokenDocument>) {
+async function transformTokenUpdate(update: UpdateQuery<TokenAttrs>) {
     const target = update.$set || update;
 
     if (target.token) {
@@ -56,8 +56,8 @@ const updateHooks = ['findOneAndUpdate', 'updateOne', 'updateMany', 'findByIdAnd
 updateHooks.forEach(hook => {
   TokenSchema.pre(
     hook as Parameters<typeof TokenSchema.pre>[0],
-    async function (this: Query<any, TokenDocument>, next) {
-      const update = this.getUpdate() as UpdateQuery<TokenDocument>; // this.getUpdate() returns the raw MongoDB update object (e.g., { $set: { code: "1234" } })
+    async function (this: Query<any, TokenAttrs>, next) {
+      const update = this.getUpdate() as UpdateQuery<TokenAttrs>; // this.getUpdate() returns the raw MongoDB update object (e.g., { $set: { code: "1234" } })
       await transformTokenUpdate(update); // run the transform settings
       this.setUpdate(update); // replace the old value with new one
       next();

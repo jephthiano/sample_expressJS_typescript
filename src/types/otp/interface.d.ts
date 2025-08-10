@@ -1,6 +1,24 @@
-import { Document } from 'mongoose';
-import type { otpUseCase } from '#src/types/otp/types.js';
+import { Document, ObjectId, Model } from 'mongoose';
+import type { otpStatus, otpUseCase } from '#src/types/otp/types.js';
 import type { messageMediumType } from '#src/types/messaging/types.js';
+
+//fields needed to be created
+interface OtpAttrs {
+  receiving_medium: string;
+  code: string;
+  use_case: otpUseCase;
+  status: otpStatus;
+  reg_date?: Date;
+}
+
+interface OtpDocument extends OtpAttrs, Document {
+  _id: ObjectId | string;
+}
+
+interface OtpModel extends Model<OtpDocument> {
+  build(attrs: OtpAttrs): OtpDocument;
+}
+
 
 interface SendOtpInputInterface {
   receiving_medium: string;
@@ -10,16 +28,14 @@ interface VerifyOtpInputInterface extends SendOtpInputInterface{
   code: string;
 }
 
-
-
 interface UpdateOtpInterface extends VerifyOtpInputInterface{
   use_case: otpUseCase;
 };
 
 interface SendOtpInterface extends SendOtpInputInterface{
   send_medium: messageMediumType;
-  use_case: otpUseCase;
   first_name: string;
+  use_case: otpUseCase;
 };
 
 interface StoreOtpInterface extends VerifyOtpInputInterface{
@@ -28,21 +44,11 @@ interface StoreOtpInterface extends VerifyOtpInputInterface{
   use_case: otpUseCase;
 };
 
-
-interface OtpTokenDocument extends Document {
-    code: string;
-    receiving_medium: string;
-    use_case:string,
-    status: string,
-    reg_date: Date;
-}
-
-
 export { 
+    OtpAttrs,
     SendOtpInputInterface,
     VerifyOtpInputInterface,
     UpdateOtpInterface,
     SendOtpInterface, 
     StoreOtpInterface,
-    OtpTokenDocument,
 };

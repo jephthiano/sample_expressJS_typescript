@@ -1,5 +1,6 @@
-import mongoose, { Query, UpdateQuery } from 'mongoose';
-import type { UserDocumentInterface } from '#src/types/user/interface.js';
+
+import mongoose, {Model,  Query, UpdateQuery } from 'mongoose';
+import type { UserAttrs, UserDocument, UserModel } from '#src/types/user/interface.js';
 import { hashPassword, selEncrypt, generateUniqueId } from '#main_util/security.util.js';
 const { Schema } = mongoose;
 
@@ -79,7 +80,7 @@ const UserSchema = new Schema({
 });
 
 // Reusable transformer for update objects
-async function transformUserUpdate(update: UpdateQuery<UserDocumentInterface>) {
+async function transformUserUpdate(update: UpdateQuery<UserAttrs>) {
     const target = update.$set || update;
 
     if (target.password) target.password = await hashPassword(target.password);
@@ -124,8 +125,8 @@ const updateHooks = ['findOneAndUpdate', 'updateOne', 'updateMany', 'findByIdAnd
 updateHooks.forEach(hook => {
   UserSchema.pre(
     hook as Parameters<typeof UserSchema.pre>[0],
-    async function (this: Query<any, UserDocumentInterface>, next) {
-      const update = this.getUpdate() as UpdateQuery<UserDocumentInterface>; // this.getUpdate() returns the raw MongoDB update object (e.g., { $set: { code: "1234" } })
+    async function (this: Query<any, UserAttrs>, next) {
+      const update = this.getUpdate() as UpdateQuery<UserAttrs>; // this.getUpdate() returns the raw MongoDB update object (e.g., { $set: { code: "1234" } })
       await transformUserUpdate(update); // run the transform settings
       this.setUpdate(update); // replace the old value with new one
       next();
@@ -133,7 +134,6 @@ updateHooks.forEach(hook => {
   );
 });
 
-
-const User = mongoose.model('users', UserSchema);
+export const User = mongoose.model<UserDocument, UserModel>('User', UserSchema);
 
 export default User;

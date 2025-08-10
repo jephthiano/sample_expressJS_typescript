@@ -1,5 +1,5 @@
 import mongoose, { Query, UpdateQuery } from 'mongoose';
-import type { OtpTokenDocument } from '#src/types/otp_token/interface.js';
+import type { OtpAttrs } from '#src/types/otp/interface.js';
 import { selEncrypt, hashPassword } from '#main_util/security.util.js';
 const { Schema } = mongoose;
 
@@ -20,7 +20,7 @@ const OtpTokenSchema = new Schema({
     },
     use_case: { 
         type: String,
-        enum: ['sign_up', 'forgot_password', 'verify_email', 'verify_mobile_number'],
+        enum: ['sign_up', 'forgot_password'],
         required: [true, 'use case is not specified'],
     },
     status: { 
@@ -35,7 +35,7 @@ const OtpTokenSchema = new Schema({
 });
 
 // Shared transformation logic
-async function transformOtpUpdate(update:UpdateQuery<OtpTokenDocument>) {
+async function transformOtpUpdate(update:UpdateQuery<OtpAttrs>) {
     const target = update.$set || update;
 
     // Only hash if it's a plain string (avoid re-hashing)
@@ -77,8 +77,8 @@ const updateHooks = ['findOneAndUpdate', 'updateOne', 'updateMany', 'findByIdAnd
 updateHooks.forEach(hook => {
   OtpTokenSchema.pre(
     hook as Parameters<typeof OtpTokenSchema.pre>[0],
-    async function (this: Query<any, OtpTokenDocument>, next) {
-      const update = this.getUpdate() as UpdateQuery<OtpTokenDocument>; // this.getUpdate() returns the raw MongoDB update object (e.g., { $set: { code: "1234" } })
+    async function (this: Query<any, OtpAttrs>, next) {
+      const update = this.getUpdate() as UpdateQuery<OtpAttrs>; // this.getUpdate() returns the raw MongoDB update object (e.g., { $set: { code: "1234" } })
       await transformOtpUpdate(update); // run the transform settings
       this.setUpdate(update); // replace the old value with new one
       next();

@@ -9,6 +9,7 @@ import { deleteApiToken } from '#main_util/token.util.js';
 import { triggerError} from '#core_util/handler.util.js';
 import { messageMediumType } from '#src/types/messaging/types.js';
 import { otpUseCase } from '#src/types/otp/types.js';
+import { UserDocument } from '#src/types/user/interface.js';
 
 class AuthService{
 
