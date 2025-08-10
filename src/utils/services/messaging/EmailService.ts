@@ -1,30 +1,40 @@
-import nodemailer from 'nodemailer';
+import nodemailer, { Transporter, SendMailOptions } from 'nodemailer';
 import { sendMessageDTO } from '#dto/messaging.dto.js';
+import { sendMessageInterface } from '#src/types/messaging/interface.js';
+import { getEnvorThrow } from '#src/utils/mains/general.util.js';
 
 class EmailService {
-    static transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
-        secure: true,
-        auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-        },
-    });
+    static host = getEnvorThrow('SMTP_HOST');
+    static port = getEnvorThrow('SMTP_PORT');
+    static user = getEnvorThrow('SMTP_USER');
+    static pass = getEnvorThrow('SMTP_PASS');
 
-    static async send(data) {
-        data = sendMessageDTO(data);
+  static transporter: Transporter = nodemailer.createTransport({
+    host: EmailService.host,
+    port: Number(EmailService.port),
+    secure: true,
+    auth: {
+      user: EmailService.user,
+      pass: EmailService.pass,
+    },
+  });
 
-        const mailOptions = {
-            from: process.env.SMTP_USER,
-            to: data.receiving_medium,
-            subject: data.subject,
-            text: data.text_content,
-            html: data.html_content,
+  static async send(data: sendMessageInterface) {
+    const dtoData = sendMessageDTO(data);
+
+    if('subject' in dtoData){
+        const mailOptions: SendMailOptions = {
+          from: EmailService.user,
+          to: dtoData.receiving_medium,
+          subject: dtoData.subject,
+          text: dtoData.text_content,
+          html: dtoData.html_content,
         };
-
+        
         await EmailService.transporter.sendMail(mailOptions);
     }
+
+  }
 }
 
 export default EmailService;

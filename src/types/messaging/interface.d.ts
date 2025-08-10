@@ -11,7 +11,7 @@ interface sendMessageInterface {
 
 interface htmlEmailInterface {
     first_name: string;
-    subject: string;
+    subject?: string;
     text_content: string;
 };
 

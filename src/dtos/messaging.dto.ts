@@ -17,9 +17,9 @@ function sendMessageDTO(data: sendMessageInterface) {
 }
 
 const emailDTO = (data: sendMessageInterface) => {
-    const first_name = data.first_name?.trim()
-    const subject = subjectTemplate(data.type);
-    const text_content = messageTemplate(data.type, data.send_medium, {
+    const first_name: string = data.first_name?.trim()
+    const subject: string = subjectTemplate(data.type);
+    const text_content: string = messageTemplate(data.type, data.send_medium, {
             code: data.code?.trim() || null,
         });
     return {

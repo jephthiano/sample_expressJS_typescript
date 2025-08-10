@@ -1,16 +1,17 @@
 import { sendMessageDTO } from '#dto/messaging.dto.js';
 import { log } from '#main_util/logger.util.js';
+import { sendMessageInterface } from '#src/types/messaging/interface.js';
 
-const logInfo = (type, data) => log(type, data, 'info');
-const logError = (type, data) => log(type, data, 'error');
+const logInfo = (type: string, data: unknown) => log(type, data, 'info');
+const logError = (type: string, data: unknown) => log(type, data, 'error');
 
 class PushNotificationService {
     
-    static async send(data) {
-        data = sendMessageDTO(data);
+    static async send(data: sendMessageInterface) {
+        const dtoData = sendMessageDTO(data);
 
         try {
-            logInfo('PUSH NOTIFICATION SERVICE', data);
+            logInfo('PUSH NOTIFICATION SERVICE', dtoData);
             return true;
         } catch (err) {
             logError('PUSH NOTIFICATION SERVICE', err);
