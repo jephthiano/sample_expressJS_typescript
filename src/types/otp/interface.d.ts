@@ -8,9 +8,21 @@ interface UpdateOtpInterface {
   code: string;
 };
 
-interface SendOtpInterface extends UpdateOtpInterface {
+interface SendOtpInterface {
   send_medium: messageMediumType;
+  receiving_medium: string;
+  use_case: otpUseCase;
+  first_name: string;
 };
+
+interface StoreOtpInterface {
+  send_medium?: messageMediumType;
+  first_name?: string;
+  receiving_medium: string;
+  use_case: otpUseCase;
+  code: string
+};
+
 
 interface OtpTokenDocument extends Document {
     code: string;
@@ -22,7 +34,8 @@ interface OtpTokenDocument extends Document {
 
 
 export { 
-    SendOtpInterface, 
     UpdateOtpInterface,
+    SendOtpInterface, 
+    StoreOtpInterface,
     OtpTokenDocument,
 };

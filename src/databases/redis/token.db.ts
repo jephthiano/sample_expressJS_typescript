@@ -5,14 +5,14 @@ import { getEnvorThrow } from '#src/utils/mains/general.util.js';
 
 const tokenExpiry = parseInt(getEnvorThrow("TOKEN_EXPIRY"));
  
- const redisGetUserIdByToken = async (token: string) => {
+ const redisGetUserIdByToken = async (token: string): Promise<string|null> => {
    const encryptedToken = selEncrypt(token, 'token');
     const userId = await redis.get(`auth:token:${encryptedToken}`);
 
     return userId ?? null;
  }
 
- const redisCreateToken = async (userId: string) => {
+ const redisCreateToken = async (userId: string): Promise<string|null> => {
       const newToken = generateUniqueToken();
       const encryptedToken = selEncrypt(newToken, 'token');
       
@@ -40,7 +40,7 @@ const tokenExpiry = parseInt(getEnvorThrow("TOKEN_EXPIRY"));
       return userSetSuccess && tokenSetSuccess ? newToken : null;
  };
 
- const redisRenewToken = async (userId: string, token: string) => {
+ const redisRenewToken = async (userId: string, token: string): Promise<boolean> => {
    const encryptedToken = selEncrypt(token, 'token');
     const pipeline = redis.pipeline();
 
@@ -56,7 +56,7 @@ const tokenExpiry = parseInt(getEnvorThrow("TOKEN_EXPIRY"));
     return tokenSuccess === 1 && userSuccess === 1 ? true : false;
  };
 
- const redisDeleteToken = async (token: string) => {
+ const redisDeleteToken = async (token: string): Promise<boolean> => {
     const encryptedToken = selEncrypt(token, 'token');
     const userId = await redis.get(`auth:token:${encryptedToken}`);
     

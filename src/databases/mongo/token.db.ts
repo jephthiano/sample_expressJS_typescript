@@ -7,13 +7,13 @@ const tokenExpiry = parseInt(getEnvorThrow("TOKEN_EXPIRY"));
 
 // const tokenExpiry = parseInt(process.env.TOKEN_EXPIRY ?? '3600', 10); // default to 3600 seconds if undefined
 
-const dbFindUnexpiredToken = async (token: string)=> {
+const dbFindUnexpiredToken = async (token: string): Promise<string|null> => {
     token = selEncrypt(token, 'token');
     const user = await Token.findOne({ token, expire_at: { $gt: new Date() } });
-    return user?.user_id ?? null;
+    return user?.user_id ? user.user_id.toString() : null;
 }
 
-const dbUpdateOrCeateToken = async (userId: string) => {
+const dbUpdateOrCeateToken = async (userId: string): Promise<string|null> => {
     const token = generateUniqueToken();
 
     const result = await Token.findOneAndUpdate(
@@ -32,7 +32,7 @@ const dbUpdateOrCeateToken = async (userId: string) => {
     return result ? token : null;
 }
 
-const DbRenewToken = async (userId: string) => {
+const DbRenewToken = async (userId: string): Promise<boolean> => {
     const renew = await Token.findOneAndUpdate(
         { user_id: userId },
         {
@@ -43,7 +43,7 @@ const DbRenewToken = async (userId: string) => {
     return renew ? true : false;
 }
 
-const dbDeleteToken = async (token: string) => {
+const dbDeleteToken = async (token: string): Promise<boolean> => {
     const encryptedToken = selEncrypt(token, 'token');
     const result = await Token.deleteOne({ token: encryptedToken });
     

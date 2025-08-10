@@ -7,6 +7,8 @@ import { queueDeleteOtp } from '#queue/deleteOtpQueue.js';
 import { sendMessage } from '#main_util/messaging.util.js';
 import { deleteApiToken } from '#main_util/token.util.js';
 import { triggerError} from '#core_util/handler.util.js';
+import { messageMediumType, sendMessageType } from '#src/types/messaging/types.js';
+import { otpUseCase } from '#src/types/otp/types.js';
 
 class AuthService{
 
@@ -46,16 +48,11 @@ class AuthService{
     }
 
     // [SEND OTP]
-    static async sendOtp(req: Request, type) {
+    static async sendOtp(req: Request, use_case: otpUseCase) {
         const { receiving_medium } = req.body;
+        const send_medium: messageMediumType = (validateInput(receiving_medium, 'email')) ? 'email' : 'whatsapp';
 
-        const data = {
-            receiving_medium,
-            send_medium : (validateInput(receiving_medium, 'email')) ? 'email' : 'whatsapp',
-            use_case : type,
-            first_name : 'user',
-            
-        };
+        const data = { receiving_medium, send_medium, use_case, first_name : 'user' };
 
         const sent = await sendOtp(data);
         if(!sent) triggerError("Request for otp failed", [], 500)
@@ -64,7 +61,7 @@ class AuthService{
     }
 
     // [VERIFY OTP]
-    static async verifyOtp(req: Request, type) {
+    static async verifyOtp(req: Request, type: string) {
         const data = {
             receiving_medium: req.body.receiving_medium,
             code: req.body.code,

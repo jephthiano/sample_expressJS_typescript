@@ -13,7 +13,7 @@ class AuthController extends BaseController{
         try {
             // Validate inputs using Joi DTO
             const { error, value } = loginJoi.validate(req.body, { abortEarly: false });
-            if (error) this.triggerValidationError(parseMessageToObject(error));
+            if (error) this.triggerValidationError(parseMessageToObject(error.details));
             
             const response = await AuthService.login(req);
             this.sendResponse(res, response, "Login successful");

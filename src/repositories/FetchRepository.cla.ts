@@ -4,8 +4,7 @@ import { UserModelInterface } from '#src/types/user/interface.js';
 class FetchRepository
 {
     static async getUserById(userId: string): Promise<UserModelInterface|null> {
-        const userDoc = await findUserByID(userId);
-        return userDoc ? userDoc : null;
+        return await findUserByID(userId);
     }
 }
 

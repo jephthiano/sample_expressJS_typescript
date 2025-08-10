@@ -1,5 +1,5 @@
 
-const log = (containerName, data, type='error') => {
+const log = (containerName: string, data: unknown, type: string ='error') => {
     // type can be error, info
     if(type === 'error'){
         console.error(containerName, type, data);
@@ -8,6 +8,4 @@ const log = (containerName, data, type='error') => {
     }
 };
 
-export  {
-    log,
-};
+export  { log, };

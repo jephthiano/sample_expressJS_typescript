@@ -1,13 +1,5 @@
 import { triggerError} from '#core_util/handler.util.js';
 
-const initialResponse = (type = 'invalid_request') => ({
-    status: false,
-    message: type === 'invalid_input' ? 'invalid inputs' : 'invalid request',
-    message_detail: '',
-    response_data: {},
-    error_data: {},
-});
-
 const getEnvorThrow = (key: string): string => {
     const val = process.env[key];
     if (!val) triggerError(`Environment variable ${key} is not defined.`, [], 500);
@@ -15,58 +7,53 @@ const getEnvorThrow = (key: string): string => {
     return val;
 }
 
-const isEmptyObject = (obj) => Object.keys(obj).length === 0;
+const isEmptyObject = (obj: object):boolean => Object.keys(obj).length === 0;
 
-const isEmptyArray = (array) => Array.isArray(array) && array.length === 0;
+const isEmptyArray = (array: any[]):boolean => Array.isArray(array) && array.length === 0;
 
-const isObject = (value) => typeof value === 'object' && value !== null && !Array.isArray(value);
+const isObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' &&
+  value !== null &&
+  !Array.isArray(value);
 
-const isKeyInObject = (key, object) => Object.prototype.hasOwnProperty.call(object, key);
+const isKeyInObject = (key: string, object: object): boolean => Object.prototype.hasOwnProperty.call(object, key);
 
-const isEmptyString = (variable) => typeof variable === 'string' && variable.trim().length === 0;
+const isEmptyString = (variable: unknown): boolean => typeof variable === 'string' && variable.trim().length === 0;
 
-const inArray = (value, array) => array.includes(value);
+const inArray = (value: string, array: unknown[]): boolean => array.includes(value);
 
-const isValidData = (data) => !(data === undefined || data === null || data === '');
+const isValidData = (data: unknown): boolean => !(data === undefined || data === null || data === '');
 
-const isPhoneSample = (value) => /^0?\d*$/.test(value.trim());
+const isNumber = (value: unknown): boolean => typeof value === 'number' && Number.isFinite(value);
 
-const detectInputType = (value) => {
-    // Looks like a phone number if it starts with digits (even with leading zero)
-    if (/^0?\d*$/.test(value.trim())) {
-      return 'phone';
-    }
-  
-    return 'unknown';
-  };
-  
-const replaceValues = (data, value, replace) => {
+const isDateLapsed = ( givenDate: Date, durationSeconds: number = 0, checkDate: Date = new Date() ): boolean => {
+  const milliDuration = durationSeconds * 1000;
+  return givenDate.getTime() + milliDuration < checkDate.getTime();
+};
+
+const replaceValues = (data: string, value: string, replace: string): string => {
     const regex = new RegExp(value, 'g');
     return data.replace(regex, replace);
 };
   
+const ucFirst = (data: string) => data.charAt(0).toUpperCase() + data.slice(1);
 
-const isNumber = (value) => !isNaN(value) && typeof Number(value) === "number" && Number.isFinite(value);
-
-const ucFirst = (data) => data.charAt(0).toUpperCase() + data.slice(1);
-
-const isDateLapsed = (givenDate, duration = 0, checkDate = new Date()) => {
-    const milliDuration = 1000 * duration;
-    return new Date(givenDate).getTime() + milliDuration < checkDate.getTime();
+type ErrorLike = {
+  path: (string | number)[];
+  message: string;
 };
 
-const parseMessageToObject = (error) => {
-    const errors = error.details.reduce((acc, err) => {
-        acc[err.path[0]] = err.message; // Assign each field's error message
-        return acc;
-    }, {});
-    
-    return errors; // Return the structured errors as an object
+const parseMessageToObject = (errorsArray: ErrorLike[]): Record<string, string> => {
+  return errorsArray.reduce<Record<string, string>>((acc, err) => {
+    if (err.path.length > 0) {
+      acc[String(err.path[0])] = err.message;
+    }
+    return acc;
+  }, {});
 };
 
 export {
     getEnvorThrow,
-    initialResponse,
     isEmptyObject,
     isEmptyArray,
     isObject,
@@ -74,11 +61,9 @@ export {
     isEmptyString,
     inArray,
     isValidData,
-    isPhoneSample,
     replaceValues,
     isNumber,
     ucFirst,
     isDateLapsed,
     parseMessageToObject,
-    detectInputType,
 };
