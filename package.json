@@ -16,6 +16,9 @@
     "dev:worker": "nodemon src/workers/index.ts --exec ts-node"
   },
   "dependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/crypto-js": "^4.2.2",
+    "@types/validator": "^13.15.2",
     "bcrypt": "^5.1.1",
     "bullmq": "^5.52.2",
     "cookie-parser": "^1.4.7",
