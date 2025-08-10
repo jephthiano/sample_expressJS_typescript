@@ -80,18 +80,3 @@ export {
     generateUniqueToken,
     generateUniqueId
 };
-
-// static encrypt1(text){
-    //     const cipher = crypto.createCipheriv(method, Buffer.from(key), iv);
-    //     let encrypted = cipher.update(text);
-    //     encrypted = Buffer.concat([encrypted, cipher.final()]);
-    //     return encrypted.toString('hex');
-    // }
-
-    // static decrypt1(text){
-    //     const encryptedText = Buffer.from(text, 'hex');
-    //     const decipher = crypto.createDecipheriv(method, Buffer.from(key), iv);
-    //     let decrypted = decipher.update(encryptedText);
-    //     decrypted = Buffer.concat([decrypted, decipher.final()]);
-    //     return decrypted.toString();
-    // }

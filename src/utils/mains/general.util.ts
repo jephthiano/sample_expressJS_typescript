@@ -18,6 +18,8 @@ const isObject = (value: unknown): value is Record<string, unknown> =>
 
 const isKeyInObject = (key: string, object: object): boolean => Object.prototype.hasOwnProperty.call(object, key);
 
+const isValidString = (data: unknown): boolean => typeof data === 'string' && data.trim().length > 0;
+
 const isEmptyString = (variable: unknown): boolean => typeof variable === 'string' && variable.trim().length === 0;
 
 const inArray = (value: string, array: unknown[]): boolean => array.includes(value);
@@ -58,6 +60,7 @@ export {
     isEmptyArray,
     isObject,
     isKeyInObject,
+    isValidString,
     isEmptyString,
     inArray,
     isValidData,

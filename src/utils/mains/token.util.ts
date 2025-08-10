@@ -1,17 +1,19 @@
+import { Request } from 'express';
 import { triggerError} from '#core_util/handler.util.js';
 import { dbFindUnexpiredToken, dbDeleteToken, dbUpdateOrCeateToken, DbRenewToken } from '#database/mongo/token.db.js';
 import { redisGetUserIdByToken, redisDeleteToken, redisCreateToken, redisRenewToken, } from '#database/redis/token.db.js';
 import { createJwtToken, renewJwtToken, validateJwtToken } from '#service_util/validation/jwt.js';
+import { isValidString } from './general.util.js';
 
 // Generate Token with expiration
-const setApiToken = async (id) => {
+const setApiToken = async (id: string) => {
     const token = await generateToken(id);
 
     return token ?? null;
 
 };
 
-const validateApiToken = async (req) => {
+const validateApiToken = async (req: Request) => {
     const token = getApiToken(req);
     if (!token) return false;
     
@@ -39,7 +41,7 @@ const validateApiToken = async (req) => {
     
 };
 
-const deleteApiToken = async (req) => {
+const deleteApiToken = async (req: Request) => {
     let status = false;
     
     const token = getApiToken(req);
@@ -58,7 +60,7 @@ const deleteApiToken = async (req) => {
 
 
 //get the token
-const getApiToken = (req) => {
+const getApiToken = (req: Request) => {
     const token = process.env.TOKEN_TYPE === 'bearer' 
                     ? extractToken(req.headers.authorization) 
                     : req.cookies._menatreyd;
@@ -67,37 +69,63 @@ const getApiToken = (req) => {
 }
 
 // Extract token from headers (Bearer Token)
-const extractToken = (authHeader) => {
-    if (authHeader && authHeader.toLowerCase().startsWith('bearer ')) {
-        const token = authHeader.split(' ')[1] || null;
-        return token ? token : null;
-    }
-    return null;
+const extractToken = (authHeader: string | string[] | undefined): string | null => {
+  if (authHeader && typeof authHeader === 'string' && authHeader.toLowerCase().startsWith('bearer ')) {
+    const token = authHeader.split(' ')[1] || null;
+    return token;
+  }
+  return null;
 };
 
-// generate token and save the token
-const  generateToken = async (userId) => {
-        const methods = {
-            jwt: () => createJwtToken(userId),
-            local_self: () => dbUpdateOrCeateToken(userId),
-            redis_self: () => redisCreateToken(userId),
-        };
 
-        const method = process.env.TOKEN_SETTER;
-        return methods[method] ? await methods[method]() : null;
-}
+const generateToken = async (
+  userId: string
+): Promise<
+    ReturnType<typeof createJwtToken> |
+    ReturnType<typeof dbUpdateOrCeateToken> |
+    ReturnType<typeof redisCreateToken> |
+    null
+> => {
+    const methods: Record<string, () => Promise<any>> = {
+        jwt: () => createJwtToken(userId),
+        local_self: () => dbUpdateOrCeateToken(userId),
+        redis_self: () => redisCreateToken(userId),
+    };
+
+    const method = process.env.TOKEN_SETTER ?? '';
+    const selectedMethod = methods[method];
+
+    if (!selectedMethod) return null; 
+
+    return await selectedMethod();
+};
 
 
-const autoRenewTokenTime = async(userId, token) => {
-    const methods = {
+
+const autoRenewTokenTime = async (
+  userId: string,
+  token: string
+): Promise<
+    ReturnType<typeof renewJwtToken> | 
+    ReturnType<typeof DbRenewToken> | 
+    ReturnType<typeof redisRenewToken> | 
+    null
+> => {
+    const methods: Record<string, () => Promise<any>> = {
         jwt: () => renewJwtToken(token),
         local_self: () => DbRenewToken(userId),
         redis_self: () => redisRenewToken(userId, token),
     };
 
-    const method = process.env.TOKEN_SETTER;
-    return methods[method] ? await methods[method]() : null;
-}
+    const method = process.env.TOKEN_SETTER ?? '';
+    const selectedMethod = methods[method];
+
+    if (! selectedMethod) return null;
+
+    return await selectedMethod();
+
+};
+
 
 export {
     getApiToken,
