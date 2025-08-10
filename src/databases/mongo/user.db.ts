@@ -17,13 +17,21 @@ const findUserByEmailOrPhone = async(receiving_medium: string) => {
         );
 }
 
-const findEmailMobileNumberUsername = async(email: string, mobile_number: string, username: string) => {
-    return Promise.all([
-            findSingleValue('User', 'email', selEncrypt(email, 'email'), 'email'),
-            findSingleValue('User', 'mobile_number', selEncrypt(mobile_number, 'mobile_number'), 'mobile_number'),
-            findSingleValue('User', 'username', selEncrypt(username, 'username'), 'username')
-        ]);
-}
+const findEmailMobileNumberUsername = async ( email: string | null, mobile_number: string | null, username: string ): Promise<[boolean, boolean, boolean]> => {
+    const processEmail = email ? selEncrypt(email, 'email') : '';
+    const processPhone = mobile_number ? selEncrypt(mobile_number, 'mobile_number') : '';
+
+    const results = await Promise.all([
+        findSingleValue('User', 'email', processEmail, 'email'),
+        findSingleValue('User', 'mobile_number', processPhone, 'mobile_number'),
+        findSingleValue('User', 'username', selEncrypt(username, 'username'), 'username'),
+    ]);
+
+    // Convert each result to boolean, e.g. non-null means exists
+    return results.map(item => !!item) as [boolean, boolean, boolean];
+};
+
+
 
 const findUserSingleValue = async (model: ModelName, checkField: string, checkValue: string, returnField: string) => {
     return await findSingleValue(model, checkField, checkValue, returnField);

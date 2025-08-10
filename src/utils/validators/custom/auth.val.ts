@@ -1,16 +1,20 @@
 import { findUserByEmailOrPhone , findEmailMobileNumberUsername} from '#database/mongo/user.db.js';
 import { isEmptyObject, isEmptyString, replaceValues } from '#main_util/general.util.js';
 import { validateInput, validatePassword } from '#main_util/security.util.js';
+import { LoginInterface, RegsiterInterface, ResetPasswordInterface, SignupInputInterface } from '#src/types/user/interface.js';
+import { otpUseCase } from '#src/types/otp/types.js';
+import { SendOtpInputInterface, VerifyOtpInputInterface } from '#src/types/otp/interface.js';
 
 // Utility function for response formatting
-const formatResponse = (errors) => ({
-    status: !isEmptyObject(errors),
-    data: errors
+const formatResponse = (errors: Record<string, string>) => ({
+  status: !isEmptyObject(errors),
+  data: errors,
 });
 
+
 // Login function
-const login = async (inputs) => {
-    const errors = {};
+const login = async (inputs: LoginInterface) => {
+    const errors: Record<string, string> = {};
     const { login_id, password } = inputs;
 
     if (!login_id || isEmptyString(login_id)) {
@@ -25,8 +29,8 @@ const login = async (inputs) => {
 };
 
 // Registration
-const register = async (inputs, regType) => {
-    const errors = {};
+const register = async (inputs: RegsiterInterface) => {
+    const errors: Record<string, string> = {};
     const {email, mobile_number, first_name, last_name, username, gender, password } = inputs;
 
     const [email_exists, mobile_exists, username_exists] = await findEmailMobileNumberUsername(email, mobile_number, username)
@@ -81,8 +85,8 @@ const register = async (inputs, regType) => {
 };
 
 // signup or forgot_password otp validation
-const sendOtp = async (inputs, type) => {
-    const errors = {};
+const sendOtp = async (inputs: SendOtpInputInterface, type: otpUseCase) => {
+    const errors: Record<string, string> = {};
     const { receiving_medium } = inputs;
     const mediumType = validateInput(receiving_medium, 'mobile_number') ? 'mobile_number' : 'email';
     const resType = replaceValues(mediumType, '_', ' ')
@@ -113,8 +117,8 @@ const sendOtp = async (inputs, type) => {
 };
 
 // Verify OTP
-const verifyOtp = async (inputs) => {
-    const errors = {};
+const verifyOtp = async (inputs: VerifyOtpInputInterface) => {
+    const errors: Record<string, string> = {};
     const { code } = inputs;
 
     if (!code || !validateInput(code, 'otp_code')) {
@@ -125,11 +129,15 @@ const verifyOtp = async (inputs) => {
 };
 
 // signup
-const signup = async (inputs, regType) => {
-    const errors = {};
+const signup = async (inputs: SignupInputInterface) => {
+    const errors: Record<string, string> = {};
     const {receiving_medium, email, mobile_number, first_name, last_name, username, gender, password } = inputs;
 
-    const [email_exists, mobile_exists, username_exists] = await findEmailMobileNumberUsername(email, mobile_number, username)
+    const [email_exists, mobile_exists, username_exists] = await findEmailMobileNumberUsername(
+        email ?? null,
+        mobile_number ?? null,
+        username
+  );
 
     //if receiving medium is mobile number else email
     if(validateInput(receiving_medium, 'mobile_number')){
@@ -184,8 +192,8 @@ const signup = async (inputs, regType) => {
 };
 
 // Reset Password
-const resetPassword = (inputs) => {
-    const errors = {};
+const resetPassword = (inputs: ResetPasswordInterface) => {
+    const errors: Record<string, string> = {};
     const { password, confirm_password } = inputs;
 
     if (!validatePassword(password)) {

@@ -7,7 +7,7 @@ import { queueDeleteOtp } from '#queue/deleteOtpQueue.js';
 import { sendMessage } from '#main_util/messaging.util.js';
 import { deleteApiToken } from '#main_util/token.util.js';
 import { triggerError} from '#core_util/handler.util.js';
-import { messageMediumType, sendMessageType } from '#src/types/messaging/types.js';
+import { messageMediumType } from '#src/types/messaging/types.js';
 import { otpUseCase } from '#src/types/otp/types.js';
 
 class AuthService{
@@ -61,11 +61,11 @@ class AuthService{
     }
 
     // [VERIFY OTP]
-    static async verifyOtp(req: Request, type: string) {
+    static async verifyOtp(req: Request, use_case: otpUseCase) {
         const data = {
             receiving_medium: req.body.receiving_medium,
             code: req.body.code,
-            use_case: type
+            use_case
         };
 
         const verify = await verifyNewOtp(data);

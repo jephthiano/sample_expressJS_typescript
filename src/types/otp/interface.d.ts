@@ -2,25 +2,30 @@ import { Document } from 'mongoose';
 import type { otpUseCase } from '#src/types/otp/types.js';
 import type { messageMediumType } from '#src/types/messaging/types.js';
 
-interface UpdateOtpInterface {
+interface SendOtpInputInterface {
   receiving_medium: string;
-  use_case: otpUseCase;
+}
+
+interface VerifyOtpInputInterface extends SendOtpInputInterface{
   code: string;
+}
+
+
+
+interface UpdateOtpInterface extends VerifyOtpInputInterface{
+  use_case: otpUseCase;
 };
 
-interface SendOtpInterface {
+interface SendOtpInterface extends SendOtpInputInterface{
   send_medium: messageMediumType;
-  receiving_medium: string;
   use_case: otpUseCase;
   first_name: string;
 };
 
-interface StoreOtpInterface {
+interface StoreOtpInterface extends VerifyOtpInputInterface{
   send_medium?: messageMediumType;
   first_name?: string;
-  receiving_medium: string;
   use_case: otpUseCase;
-  code: string
 };
 
 
@@ -34,6 +39,8 @@ interface OtpTokenDocument extends Document {
 
 
 export { 
+    SendOtpInputInterface,
+    VerifyOtpInputInterface,
     UpdateOtpInterface,
     SendOtpInterface, 
     StoreOtpInterface,

@@ -1,3 +1,3 @@
-type otpUseCase = 'signup' | 'forgot_password';
+type otpUseCase = 'sign_up' | 'forgot_password';
 
 export { otpUseCase };

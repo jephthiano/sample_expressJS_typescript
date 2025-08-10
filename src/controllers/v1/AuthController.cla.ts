@@ -27,7 +27,7 @@ class AuthController extends BaseController{
     static async register(req: Request, res: Response) {
         try {
             //validate inputs (custome)
-            const { status, data } = await register(req.body, 'single');
+            const { status, data } = await register(req.body);
             if (status) this.triggerValidationError(data);
 
             const response = await AuthService.register(req);
@@ -80,7 +80,7 @@ class AuthController extends BaseController{
     static async signup(req: Request, res: Response) {
         try {
             //validate inputs
-            const { status, data } = await signup(req.body, 'multi');
+            const { status, data } = await signup(req.body);
             if (status) this.triggerValidationError(data);
 
             const response =  await AuthService.signup(req);
