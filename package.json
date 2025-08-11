@@ -1,7 +1,7 @@
 {
-  "name": "sample-api-express-js-import",
+  "name": "sample-api-express-ts-import",
   "version": "1.0.0",
-  "description": "A boilerplate Express.js (ESM `import) API project for rapid backend development. This project is designed to help you kickstart any API-based service quickly, with built-in user authentication and OTP-based signup options. this project is designed with clean architecture",
+  "description": "A boilerplate Express.js Typescript (ESM `import) API project for rapid backend development. This project is designed to help you kickstart any API-based service quickly, with built-in user authentication and OTP-based signup options. this project is designed with clean architecture",
   "main": "dist/server.js",
   "author": "jephthah oladejo",
   "license": "ISC",
@@ -12,8 +12,8 @@
     "prestart": "npm run build",
     "start": "node -r tsconfig-paths/register dist/server.js",
     "start:worker": "node dist/src/workers/index.js",
-    "dev": "nodemon server.ts --exec ts-node",
-    "dev:worker": "nodemon src/workers/index.ts --exec ts-node"
+    "dev": "nodemon -r tsconfig-paths/register dist/server.js",
+    "dev:worker": "nodemon dist/src/workers/index.js"
   },
   "dependencies": {
     "@types/bcrypt": "^6.0.0",
