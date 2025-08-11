@@ -1,7 +1,7 @@
 class ValidationError extends Error {
-  public errors: { field: string; message: string }[];
+  public errors: unknown;
 
-  constructor(errors: { field: string; message: string }[]) {
+  constructor(errors: unknown) {
     super("Validation failed");
     this.name = "ValidationError";
     this.errors = errors; // array of { field, message }
@@ -11,7 +11,10 @@ class ValidationError extends Error {
   
   
   class CustomApiException extends Error {
-    constructor(message: string, status = 400, details: {} = {}) {
+    public status: number;
+    public details: unknown;
+
+    constructor(message: string, status:number = 400, details: unknown = {}) {
       super(message);
       this.name    = "CustomApiException";
       this.status  = status;

@@ -1,11 +1,16 @@
 import { Response } from 'express';
-
 import { ValidationError, CustomApiException } from '#core_util/errors.util.js';
 
 /**
  * Send a standardized JSON response.
  */
-function sendResponse(res: Response, data: {} = {}, message:string = "OK", status:boolean | string = true, error:{}[] = [], statusCode:number = 200) {
+function sendResponse(
+  res: Response, data: unknown = {}, 
+  message:string = "OK", 
+  status:boolean | string = true, 
+  error: unknown = {}, 
+  statusCode:number = 200
+) {
   return res.status(statusCode).json({
     status,
     message,
@@ -18,31 +23,37 @@ function sendResponse(res: Response, data: {} = {}, message:string = "OK", statu
  * Centralized exception handler.  
  * ValidationError, DB errors, and CustomApiException.
  */
-function handleException(res: Response, error) {
-
+function handleException(res: Response, error: unknown) {
   // for validation error
   if (error instanceof ValidationError) {
     return sendResponse(res, {}, error.message, false, error.errors, 422);
   }
 
   // for database error
-  if (error.name === "SequelizeDatabaseError" || error.name === "MongoError") {
-    const errorData = process.env.NODE_ENV === "development"
-                        ? { stack: error.stack, message: error?.message ?? null }
-                        : [];
+  if (isErrorWithName(error, "SequelizeDatabaseError") || isErrorWithName(error, "MongoError")) {
+    const errorData =
+      process.env.NODE_ENV === "development"
+        ? { stack: error.stack, message: error.message }
+        : [];
     return sendResponse(res, {}, "Something went wrong", false, errorData, 500);
   }
 
-  // for custome error
+  // for custom error
   if (error instanceof CustomApiException) {
     return sendResponse(res, {}, error.message, false, error.details, error.status);
   }
 
   // fallback
-  const errorData = process.env.NODE_ENV === "development"
-                      ? { message: error.message, stack: error.stack }
-                      : [];
-  return sendResponse(res, {}, "Something went wrong", false, errorData, 500);
+  if (error instanceof Error) {
+    const errorData =
+      process.env.NODE_ENV === "development"
+        ? { message: error.message, stack: error.stack }
+        : [];
+    return sendResponse(res, {}, "Something went wrong", false, errorData, 500);
+  }
+
+  // if error is not even an Error object
+  return sendResponse(res, {}, "Something went wrong", false, [], 500);
 }
 
 /**
@@ -55,12 +66,17 @@ function triggerError(message: string, details:{} = {}, statusCode:number = 403)
 /**
  * Throw a validation exception (422).
  */
-function triggerValidationError(details:{} = {}) {
+function triggerValidationError(details: unknown) {
   throw new ValidationError(details);
 }
 
 function returnNotFound(res: Response, message='Not Found') {
   sendResponse(res, {}, message, false, [], 404);
+}
+
+// Helper type guard
+function isErrorWithName(err: unknown, name: string): err is Error & { name: string } {
+  return err instanceof Error && err.name === name;
 }
 
 export {
