@@ -1,5 +1,5 @@
 import { findUserByID } from '#database/mongo/user.db.js';
-import { UserDocument } from '#src/types/user/interface.js';
+import type { UserDocument } from '#src/types/user/interface.js';
 
 class FetchRepository
 {

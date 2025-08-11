@@ -3,8 +3,8 @@ import { generateUniqueId, verifyPassword } from '#main_util/security.util.js';
 import { sendMessage } from '#main_util/messaging.util.js';
 import { findOneOtpData, storeOtp, updateOtpStatus, deleteManyOtp }from '#database/mongo/otp.db.js';
 import { triggerError} from '#core_util/handler.util.js';
-import { SendOtpInterface, UpdateOtpInterface } from '#src/types/otp/interface.js';
-import { sendMessageType } from '#src/types/messaging/types.js';
+import type { SendOtpInterface, UpdateOtpInterface } from '#src/types/otp/interface.js';
+import type { sendMessageType } from '#src/types/messaging/types.js';
 
 // SEND OTP
 const sendOtp = async (data: SendOtpInterface): Promise<boolean> => {

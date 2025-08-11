@@ -4,7 +4,7 @@ import AuthService from '#service/v1/AuthService.cla.js';
 import { register, sendOtp, verifyOtp, signup, resetPassword} from '#validator_util/custom/auth.val.js';
 import { loginJoi } from '#validator_util/joi/auth.joi.js';
 import { parseMessageToObject } from '#main_util/general.util.js';
-import { otpUseCase } from '#src/types/otp/types.js';
+import type { otpUseCase } from '#src/types/otp/types.js';
 
 
 class AuthController extends BaseController{

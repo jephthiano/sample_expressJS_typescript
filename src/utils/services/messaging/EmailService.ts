@@ -1,6 +1,6 @@
 import nodemailer, { Transporter, SendMailOptions } from 'nodemailer';
 import { sendMessageDTO } from '#dto/messaging.dto.js';
-import { sendMessageInterface } from '#src/types/messaging/interface.js';
+import type { sendMessageInterface } from '#src/types/messaging/interface.js';
 import { getEnvorThrow } from '#src/utils/mains/general.util.js';
 
 class EmailService {

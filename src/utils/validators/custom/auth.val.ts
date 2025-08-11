@@ -1,9 +1,9 @@
 import { findUserByEmailOrPhone , findEmailMobileNumberUsername} from '#database/mongo/user.db.js';
 import { isEmptyObject, isEmptyString, replaceValues } from '#main_util/general.util.js';
 import { validateInput, validatePassword } from '#main_util/security.util.js';
-import { LoginInterface, RegsiterInterface, ResetPasswordInterface, SignupInputInterface } from '#src/types/user/interface.js';
-import { otpUseCase } from '#src/types/otp/types.js';
-import { SendOtpInputInterface, VerifyOtpInputInterface } from '#src/types/otp/interface.js';
+import type { LoginInterface, RegsiterInterface, ResetPasswordInterface, SignupInputInterface } from '#src/types/user/interface.js';
+import type { otpUseCase } from '#src/types/otp/types.js';
+import type { SendOtpInputInterface, VerifyOtpInputInterface } from '#src/types/otp/interface.js';
 
 // Utility function for response formatting
 const formatResponse = (errors: Record<string, string>) => ({

@@ -1,4 +1,4 @@
-import { UpdateOtpInterface } from "#src/types/otp/interface.js";
+import type { UpdateOtpInterface } from "#src/types/otp/interface.js";
 
 function createOtpDTO(data: UpdateOtpInterface) {
 

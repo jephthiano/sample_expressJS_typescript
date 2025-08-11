@@ -7,9 +7,8 @@ import { queueDeleteOtp } from '#queue/deleteOtpQueue.js';
 import { sendMessage } from '#main_util/messaging.util.js';
 import { deleteApiToken } from '#main_util/token.util.js';
 import { triggerError} from '#core_util/handler.util.js';
-import { messageMediumType } from '#src/types/messaging/types.js';
-import { otpUseCase } from '#src/types/otp/types.js';
-import { UserDocument } from '#src/types/user/interface.js';
+import type { messageMediumType } from '#src/types/messaging/types.js';
+import type { otpUseCase } from '#src/types/otp/types.js';
 
 class AuthService{
 

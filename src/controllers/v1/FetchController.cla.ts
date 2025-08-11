@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import BaseController from '#controller/BaseController.cla.js';
 import FetchService from '#service/v1/FetchService.cla.js';
-import { UserDocument } from '#src/types/user/interface.js';
+import type { UserDocument } from '#src/types/user/interface.js';
 
 
 class FetchController extends BaseController{

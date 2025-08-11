@@ -1,6 +1,6 @@
 import { sendMessageDTO } from '#dto/messaging.dto.js';
 import { log } from '#main_util/logger.util.js';
-import { sendMessageInterface } from '#src/types/messaging/interface.js';
+import type { sendMessageInterface } from '#src/types/messaging/interface.js';
 
 const logInfo = (type: string, data: unknown) => log(type, data, 'info');
 const logError = (type: string, data: unknown) => log(type, data, 'error');
