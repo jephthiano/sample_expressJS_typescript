@@ -10,8 +10,8 @@ class UserResource {
 
   toJSON(): UserResourceInterface {
     return {
-      id: this.user._id,
-      unique_id: this.user.unique_id,
+      id: this.user._id.toString(),
+      unique_id: this.user.unique_id ?? "",
       email: this.user.email,
       mobile_number: this.user.mobile_number,
       username: this.user.username,
@@ -23,8 +23,8 @@ class UserResource {
       dob: this.user.dob,
       address: this.user.address,
       status: this.user.status,
-      email_verified_at: this.user.email_verified_at,
-      mobile_number_verified_at: this.user.mobile_number_verified_at,
+      email_verified_at: this.user.email_verified_at || undefined,
+      mobile_number_verified_at: this.user.mobile_number_verified_at || undefined,
       created_at: this.user.created_at,
     };
   }
