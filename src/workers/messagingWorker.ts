@@ -3,8 +3,8 @@ import { redis } from '#config/redis.js';
 import { sendMessage } from '#main_util/messaging.util.js';
 import { log } from '#main_util/logger.util.js';
 
-const logInfo = (type, data) => log(type, data, 'info');
-const logError = (type, data) => log(type, data, 'error');
+const logInfo = (type: string, data: unknown) => log(type, data, 'info');
+const logError = (type:string, data: unknown) => log(type, data, 'error');
 
 // Create the worker
 const worker = new Worker(
@@ -13,7 +13,11 @@ const worker = new Worker(
     try {
       await sendMessage(job.data.data);
     } catch (err) {
-      logInfo('MESSAGING WORKER', `Error sending message: ${err.message}`);
+      if (err instanceof Error) {
+        logInfo('MESSAGING WORKER', `Error sending message: ${err.message}`);
+      } else {
+        logInfo('MESSAGING WORKER', `Unknown error: ${String(err)}`);
+      }
       throw err; // ensure BullMQ registers it as a failure
     }
   },
@@ -26,7 +30,11 @@ const worker = new Worker(
 
 // Error handler
 worker.on('failed', (job, err) => {
-  logError('MESSAGING WORKER', `❌ Job failed for ${job?.data?.data?.send_medium || 'unknown'}: ${err.message}`);
+  if (err instanceof Error) {
+    logError('MESSAGING WORKER', `❌ Job failed for ${job?.data?.data?.send_medium || 'unknown'}: ${err.message}`);
+  } else {
+    logError('MESSAGING WORKER', `❌ Job failed: ${String(err)}`);
+  }
 });
 
 worker.on('completed', (job) => {

@@ -6,7 +6,7 @@ import PushNotificationService from '#service_util/messaging/PushNotificationSer
 import type { sendMessageInterface } from '#src/types/messaging/interface.js';
 
 
-const sendMessage = async (data: sendMessageInterface, type: 'queue' | 'no_queue') => {
+const sendMessage = async (data: sendMessageInterface, type: 'queue' | 'no_queue' = 'queue') => {
     const messageData = data;
 
     if(type === 'queue'){

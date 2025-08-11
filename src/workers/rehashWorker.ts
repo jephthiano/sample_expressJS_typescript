@@ -3,8 +3,8 @@ import { redis } from '#config/redis.js';
 import { updateSingleField } from '#database/mongo/general.db.js';
 import { log } from '#main_util/logger.util.js';
 
-const logInfo = (type, data) => log(type, data, 'info');
-const logError = (type, data) => log(type, data, 'error');
+const logInfo = (type: string, data: unknown) => log(type, data, 'info');
+const logError = (type:string, data: unknown) => log(type, data, 'error');
 
 // Create the worker
 const worker = new Worker(
@@ -14,7 +14,11 @@ const worker = new Worker(
       const data = job.data.data
       await updateSingleField('User', 'id', data.userId, 'password', data.plainPassword);
     } catch (err) {
-      logInfo('REHASH WORKER', `Error rehashing password: ${err.message}`);
+      if (err instanceof Error) {
+        logInfo('REHASH WORKER', `Error rehashing password: ${err.message}`);
+      } else {
+        logInfo('REHASH WORKER', `Unknown error: ${String(err)}`);
+      }
       throw err; // ensure BullMQ registers it as a failure
     }
   },
@@ -26,7 +30,11 @@ const worker = new Worker(
 
 // Error handler
 worker.on('failed', (job, err) => {
-  logError('REHASH WORKER', `❌ Job failed for rehashing: ${err.message}`);
+  if (err instanceof Error) {
+    logError('REHASH WORKER', `❌ Job failed for rehashing: ${err.message}`);
+  } else {
+    logError('REHASH WORKER', `❌ Job failed: ${String(err)}`);
+  }
 });
 
 worker.on('completed', (job) => {

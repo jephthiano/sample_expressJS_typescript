@@ -3,8 +3,8 @@ import { redis } from '#config/redis.js';
 import { deleteOtp } from '#main_util/otp.util.js';
 import { log } from '#main_util/logger.util.js';
 
-const logInfo = (type, data) => log(type, data, 'info');
-const logError = (type, data) => log(type, data, 'error');
+const logInfo = (type: string, data: unknown) => log(type, data, 'info');
+const logError = (type:string, data: unknown) => log(type, data, 'error');
 
 // Create the worker
 const worker = new Worker(
@@ -16,7 +16,11 @@ const worker = new Worker(
       const data = job.data.data;
       await deleteOtp(data);
     } catch (err) {
-      logInfo('REHASH WORKER', `Error rehashing password: ${err.message}`);
+      if (err instanceof Error) {
+        logInfo('REHASH WORKER', `Error deleting otp: ${err.message}`);
+      } else {
+        logInfo('REHASH WORKER', `Unknown error: ${String(err)}`);
+      }
       throw err; // ensure BullMQ registers it as a failure
     }
   },
@@ -28,7 +32,11 @@ const worker = new Worker(
 
 // Error handler
 worker.on('failed', (job, err) => {
-  logError('DELETE OTP WORKER', `❌ Job failed for deleteing otp: ${err.message}`);
+  if (err instanceof Error) {
+    logError('DELETE OTP WORKER', `❌ Job failed for deleting otp: ${err.message}`);
+  } else {
+    logError('DELETE OTP WORKER', `❌ Job failed: ${String(err)}`);
+  }
 });
 
 worker.on('completed', (job) => {
