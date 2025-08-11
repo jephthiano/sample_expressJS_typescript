@@ -3,7 +3,7 @@ import { triggerError} from '#core_util/handler.util.js';
 import { dbFindUnexpiredToken, dbDeleteToken, dbUpdateOrCeateToken, DbRenewToken } from '#database/mongo/token.db.js';
 import { redisGetUserIdByToken, redisDeleteToken, redisCreateToken, redisRenewToken, } from '#database/redis/token.db.js';
 import { createJwtToken, renewJwtToken, validateJwtToken } from '#service_util/validation/jwt.js';
-import { isValidString } from './general.util.js';
+import { extractCookieToken } from '#main_util/cookie.util.js';
 
 // Generate Token with expiration
 const setApiToken = async (id: string) => {
@@ -62,14 +62,16 @@ const deleteApiToken = async (req: Request) => {
 //get the token
 const getApiToken = (req: Request) => {
     const token = process.env.TOKEN_TYPE === 'bearer' 
-                    ? extractToken(req.headers.authorization) 
-                    : req.cookies._menatreyd;
+                    ? extractBearerToken(req) 
+                    : extractCookieToken(req);
 
     return token ?? null;
 }
 
 // Extract token from headers (Bearer Token)
-const extractToken = (authHeader: string | string[] | undefined): string | null => {
+const extractBearerToken = (req: Request): string | null => {
+    const authHeader: string|undefined = req.headers.authorization
+
   if (authHeader && typeof authHeader === 'string' && authHeader.toLowerCase().startsWith('bearer ')) {
     const token = authHeader.split(' ')[1] || null;
     return token;

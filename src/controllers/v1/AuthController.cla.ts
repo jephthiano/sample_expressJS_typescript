@@ -5,6 +5,7 @@ import { register, sendOtp, verifyOtp, signup, resetPassword} from '#validator_u
 import { loginJoi } from '#validator_util/joi/auth.joi.js';
 import { parseMessageToObject } from '#main_util/general.util.js';
 import type { otpUseCase } from '#src/types/otp/types.js';
+import { setTokenCookie } from '#src/utils/mains/cookie.util.js';
 
 
 class AuthController extends BaseController{
@@ -17,6 +18,8 @@ class AuthController extends BaseController{
             if (error) this.triggerValidationError(parseMessageToObject(error.details));
             
             const response = await AuthService.login(req);
+
+            setTokenCookie(res, response?.token ?? null);
             this.sendResponse(res, response, "Login successful");
         } catch (error) {
             this.handleException(res, error);
@@ -33,6 +36,7 @@ class AuthController extends BaseController{
 
             const response = await AuthService.register(req);
 
+            setTokenCookie(res, response?.token ?? null);
             this.sendResponse(res, response, "Account successfully created");
         } catch (error) {
             this.handleException(res, error);
@@ -86,6 +90,7 @@ class AuthController extends BaseController{
 
             const response =  await AuthService.signup(req);
 
+            setTokenCookie(res, response?.token ?? null);
             this.sendResponse(res, response, "Account successfully created");
         } catch (error) {
             this.handleException(res, error);
