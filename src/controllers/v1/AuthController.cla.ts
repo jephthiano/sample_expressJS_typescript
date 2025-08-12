@@ -6,6 +6,7 @@ import { loginJoi } from '#validator_util/joi/auth.joi.js';
 import { parseMessageToObject } from '#main_util/general.util.js';
 import type { otpUseCase } from '#src/types/otp/types.js';
 import { setTokenCookie } from '#src/utils/mains/cookie.util.js';
+import { isValidOtpParam } from '#src/utils/mains/otp.util.js';
 
 
 class AuthController extends BaseController{
@@ -48,7 +49,7 @@ class AuthController extends BaseController{
         const type = req.params.type as otpUseCase;
 
         try {
-            if (!['sign_up', 'forgot_password'].includes(type)) this.triggerError("Invalid Request", []);
+            if (!isValidOtpParam(type)) this.triggerError("Invalid Request", []);
 
             //validate inputs
             const { status, data } = await sendOtp(req.body, type);
@@ -67,7 +68,7 @@ class AuthController extends BaseController{
         const type = req.params.type as otpUseCase;
 
         try {
-            if (!['sign_up', 'forgot_password'].includes(type)) this.triggerError("Invalid Request", []);
+            if (!isValidOtpParam(type)) this.triggerError("Invalid Request", []);
 
             // validate inputs
             const { status, data } = await verifyOtp(req.body);

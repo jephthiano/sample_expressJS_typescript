@@ -5,6 +5,13 @@ import { findOneOtpData, storeOtp, updateOtpStatus, deleteManyOtp }from '#databa
 import { triggerError} from '#core_util/handler.util.js';
 import type { SendOtpInterface, UpdateOtpInterface } from '#src/types/otp/interface.js';
 import type { sendMessageType } from '#src/types/messaging/types.js';
+import type { otpUseCase } from '#src/types/otp/types.js';
+
+const isValidOtpParam =  async (type: otpUseCase) => {
+    return ['sign_up', 'forgot_password'].includes(type);
+
+    // return in_array(['forgot_password','sign_up'], type)
+}
 
 // SEND OTP
 const sendOtp = async (data: SendOtpInterface): Promise<boolean> => {
@@ -75,6 +82,7 @@ const deleteOtp = async (receiving_medium: string): Promise<boolean> => {
 };
 
 export {
+    isValidOtpParam,
     sendOtp,
     verifyNewOtp,
     verifyUsedOtp,
