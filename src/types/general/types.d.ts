@@ -1,4 +1,4 @@
-type ModelName = 'User' | 'OtpToken' | 'Token';
+type ModelName = 'User' | 'Otp' | 'Token';
 
 // type UpdateHook = | 'findOneAndUpdate' | 'updateOne' | 'updateMany' | 'findByIdAndUpdate';
 

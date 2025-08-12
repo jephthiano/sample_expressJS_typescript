@@ -5,7 +5,7 @@ const { Schema } = mongoose;
 
 
 // Define Schema
-const OtpTokenSchema = new Schema({
+const OtpSchema = new Schema({
     receiving_medium: { 
         type: String,
         unique: true,
@@ -59,7 +59,7 @@ async function transformOtpUpdate(update:UpdateQuery<OtpAttrs>) {
 }
 
 // Pre-save for new entries
-OtpTokenSchema.pre('save', async function (next) {
+OtpSchema.pre('save', async function (next) {
     if (this.isModified('code') && !this.code.startsWith('$2b$')) {
         this.code = await hashPassword(this.code);
     }
@@ -75,8 +75,8 @@ OtpTokenSchema.pre('save', async function (next) {
 // as const shows they are fixed string literals [Prevents hook names from becoming string[], so that typescript knows the exact hook name not just some stirng and catches the type]
 const updateHooks = ['findOneAndUpdate', 'updateOne', 'updateMany', 'findByIdAndUpdate'] as const; 
 updateHooks.forEach(hook => {
-  OtpTokenSchema.pre(
-    hook as Parameters<typeof OtpTokenSchema.pre>[0],
+  OtpSchema.pre(
+    hook as Parameters<typeof OtpSchema.pre>[0],
     async function (this: Query<any, OtpAttrs>, next) {
       const update = this.getUpdate() as UpdateQuery<OtpAttrs>; // this.getUpdate() returns the raw MongoDB update object (e.g., { $set: { code: "1234" } })
       await transformOtpUpdate(update); // run the transform settings
@@ -87,7 +87,7 @@ updateHooks.forEach(hook => {
 });
 
 
-const OtpToken = mongoose.model('OtpTokens', OtpTokenSchema);
+const Otp = mongoose.model('Otps', OtpSchema);
 
-export default OtpToken;
+export default Otp;
 

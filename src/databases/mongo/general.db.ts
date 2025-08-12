@@ -1,6 +1,6 @@
 import type { Model } from 'mongoose';
 import User from '#model/User.schema.js';
-import OtpToken from '#model/OtpToken.schema.js';
+import Otp from '#model/Otp.schema.js';
 import Token from '#model/Token.schema.js';
 import { triggerError} from '#core_util/handler.util.js';
 import type { ModelName } from '#src/types/general/types.js';
@@ -29,7 +29,7 @@ const updateSingleField = async (collectionName: ModelName, whereField: string, 
 };
 
 const getModel = (ModelName: ModelName): any => {
-  const models = { User, OtpToken, Token };
+  const models = { User, Otp, Token };
   return models[ModelName] || null;
 };
 

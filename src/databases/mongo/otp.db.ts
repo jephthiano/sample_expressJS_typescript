@@ -1,4 +1,4 @@
-import Otp from '#model/OtpToken.schema.js';
+import Otp from '#src/models/Otp.schema.js';
 import { createOtpDTO } from '#dto/otp.dto.js';
 import { selEncrypt }  from '#main_util/security.util.js';
 import type { StoreOtpInterface, UpdateOtpInterface } from '#src/types/otp/interface.js';
