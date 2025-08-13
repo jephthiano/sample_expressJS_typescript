@@ -9,8 +9,6 @@ import type { otpUseCase } from '#src/types/otp/types.js';
 
 const isValidOtpParam =  async (type: otpUseCase) => {
     return ['sign_up', 'forgot_password'].includes(type);
-
-    // return in_array(['forgot_password','sign_up'], type)
 }
 
 // SEND OTP
@@ -25,6 +23,7 @@ const sendOtp = async (data: SendOtpInterface): Promise<boolean> => {
         const type: sendMessageType = 'otp_code';
         const messageData = {...data, code, type};
         sendMessage(messageData, 'queue');
+        
         response = true;
     }
 

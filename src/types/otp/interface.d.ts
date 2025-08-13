@@ -33,14 +33,14 @@ interface UpdateOtpInterface extends VerifyOtpInputInterface{
 };
 
 interface SendOtpInterface extends SendOtpInputInterface{
+  first_name?: string;
   send_medium: messageMediumType;
-  first_name: string;
   use_case: otpUseCase;
 };
 
 interface StoreOtpInterface extends VerifyOtpInputInterface{
-  send_medium?: messageMediumType;
   first_name?: string;
+  send_medium?: messageMediumType;
   use_case: otpUseCase;
 };
 

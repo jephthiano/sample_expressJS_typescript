@@ -17,7 +17,7 @@ function sendMessageDTO(data: sendMessageInterface) {
 }
 
 const emailDTO = (data: sendMessageInterface) => {
-    const first_name: string = data.first_name?.trim()
+    const first_name: string = data.first_name?.trim() ?? "User";
     const subject: string = subjectTemplate(data.type);
     const text_content: string = messageTemplate(data.type, data.send_medium, {
             code: data.code?.trim() || null,
@@ -34,7 +34,7 @@ const emailDTO = (data: sendMessageInterface) => {
 const smsDTO = (data: sendMessageInterface) => {
     const send_medium = 'sms';
     return {
-        first_name: data.first_name?.trim(),
+        first_name: data.first_name?.trim() ?? "User",
         receiving_medium: data.receiving_medium?.trim(),
         message: messageTemplate(data.type, data.send_medium, {
             code: data.code?.trim() || null,
@@ -45,7 +45,7 @@ const smsDTO = (data: sendMessageInterface) => {
 const whatsappDTO = (data: sendMessageInterface) => {
     const send_medium = 'whatsapp';
     return {
-        first_name: data.first_name?.trim(),
+        first_name: data.first_name?.trim() ?? "User",
         receiving_medium: data.receiving_medium?.trim(),
         message: messageTemplate(data.type, data.send_medium, {
             code: data.code?.trim() || null,

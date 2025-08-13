@@ -52,7 +52,7 @@ class AuthService{
         const { receiving_medium } = req.body;
         const send_medium: messageMediumType = (validateInput(receiving_medium, 'email')) ? 'email' : 'whatsapp';
 
-        const data = { receiving_medium, send_medium, use_case, first_name : 'user' };
+        const data = { receiving_medium, send_medium, use_case};
 
         const sent = await sendOtp(data);
         if(!sent) triggerError("Request for otp failed", [], 500)
@@ -76,7 +76,7 @@ class AuthService{
     static async signup(req: Request) {
         const { receiving_medium, code, first_name, email } = req.body;
     
-        const verifyOtp = await verifyUsedOtp({ receiving_medium, use_case: 'sign_up', code });
+        await verifyUsedOtp({ receiving_medium, use_case: 'sign_up', code });
 
         // Create user
         const user = await AuthRepository.createUser(req.body);
@@ -94,7 +94,8 @@ class AuthService{
     //FORGOT PASSWORD [RESET PASSWORD]
     static async resetPassword(req: Request) {
         const { code, receiving_medium } = req.body;
-        const verifyOtp = await verifyUsedOtp({ receiving_medium, use_case: 'forgot_password', code }); 
+        
+        await verifyUsedOtp({ receiving_medium, use_case: 'forgot_password', code }); 
 
         const updateUserData = await AuthRepository.updatePassword(req.body);
         if(!updateUserData) triggerError("Password reset failed", [], 500);

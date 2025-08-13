@@ -26,7 +26,6 @@ const verifyPassword = async (plainPassword: string, hashedPassword: string, use
     return true;
 };
 
-
 const passwordNeedRehash = (hashedPassword: string): boolean => {
     const currentRounds: number = parseInt(hashedPassword.split('$')[2], 10); // split by $
     return currentRounds !== parseInt(cost);

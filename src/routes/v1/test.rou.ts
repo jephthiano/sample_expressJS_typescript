@@ -7,12 +7,12 @@ const router: Router = express.Router();
 
 router.get('/messaging', async (req: Request, res: Response) => {
     // for email
-    // const messageData: sendMessageInterface = {
-    //     first_name: 'Jephthaooh',
-    //     receiving_medium: 'jephthahooh@gmail.com',
-    //     type: 'welcome',
-    //     send_medium: 'email',
-    // };
+    const messageData: sendMessageInterface = {
+        // first_name: 'Jephthaooh',
+        receiving_medium: 'jephthahooh@gmail.com',
+        type: 'welcome',
+        send_medium: 'email',
+    };
 
     // for whatsapp
     // const messageData: sendMessageInterface = {
@@ -31,12 +31,12 @@ router.get('/messaging', async (req: Request, res: Response) => {
     // };
 
     // for push notification
-    const messageData: sendMessageInterface  = {
-        first_name: 'Jephthaooh',
-        receiving_medium: 'dfgvghvgvgdv',
-        type: 'welcome',
-        send_medium: 'push_notification',
-    };
+    // const messageData: sendMessageInterface  = {
+    //     first_name: 'Jephthaooh',
+    //     receiving_medium: 'dfgvghvgvgdv',
+    //     type: 'welcome',
+    //     send_medium: 'push_notification',
+    // };
 
     sendMessage(messageData, 'queue');
     res.status(200).json({message:'working'});
