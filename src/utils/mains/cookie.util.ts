@@ -3,9 +3,9 @@ import { Request, Response } from "express";
 import { getEnvorThrow } from "./general.util.js";
 
 const setTokenCookie = (res: Response, token: string|null) => {
-    const tokenType = getEnvorThrow('TOKEN_TYPE');
+    const TOKEN_TYPE = getEnvorThrow('TOKEN_TYPE');
 
-    if(token && tokenType === 'cookie'){
+    if(token && TOKEN_TYPE === 'cookie'){
         res.cookie("_menatreyd", token, {
             httpOnly: true,
             // secure: true,

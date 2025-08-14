@@ -5,20 +5,20 @@ import { getEnvorThrow } from '#src/utils/mains/general.util.js';
 const logInfo = (type: string, data: string) => log(type, data, 'info');
 const logError = (type: string, data: string) => log(type, data, 'error');
 
-const rawPort = parseInt(getEnvorThrow("REDIS_PORT"));
-const redisHost = getEnvorThrow("REDIS_HOST");
+const RAW_PORT = parseInt(getEnvorThrow("REDIS_PORT"));
+const REDIS_HOST = getEnvorThrow("REDIS_HOST");
 // const redisPassword = getEnvorThrow("REDIS_PASSWORD");
 
-const redisPort = Number(rawPort);
-if (isNaN(redisPort)) throw new Error('REDIS_PORT must be a valid number');
+const REDIS_PORT = Number(RAW_PORT);
+if (isNaN(REDIS_PORT)) throw new Error('REDIS_PORT must be a valid number');
 
 const redis = new Redis({
-    host: redisHost,
-    port: redisPort,
+    host: REDIS_HOST,
+    port: REDIS_PORT,
     maxRetriesPerRequest: null,
     // password: redisPassword, // Uncomment if using auth
 });
 
-logInfo('REDIS', `Connected to Redis at ${redisHost}:${redisPort}`);
+logInfo('REDIS', `Connected to Redis at ${REDIS_HOST}:${REDIS_PORT}`);
 
 export { redis };

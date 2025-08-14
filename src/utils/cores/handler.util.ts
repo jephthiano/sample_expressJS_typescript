@@ -1,6 +1,13 @@
 import { Response } from 'express';
 import { ValidationError, CustomApiException } from '#core_util/errors.util.js';
-import { getEnvorThrow } from '../mains/general.util.js';
+
+const getEnvorThrow = (key: string): string => {
+    const val = process.env[key];
+    if (!val) triggerError(`Environment variable ${key} is not defined.`, [], 500);
+    
+    return val;
+}
+
 
 const NODE_ENV = getEnvorThrow("NODE_ENV");
 

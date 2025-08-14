@@ -8,9 +8,9 @@ const logError = (type: string, data: string) => log(type, data, 'error');
 
 const connectDB = async () => {
     try {
-        const uri = getEnvorThrow("MONGODB_URI");
+        const MONGODB_URI = getEnvorThrow("MONGODB_URI");
         
-        const conn = await mongoose.connect(uri);
+        const conn = await mongoose.connect(MONGODB_URI);
 
         logInfo("DATABASE CONFIG", `✅ Database connected: ${conn.connection.host}`);
     } catch (err) {
