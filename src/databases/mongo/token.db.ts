@@ -3,9 +3,7 @@ import { selEncrypt }  from '#main_util/security.util.js';
 import { generateUniqueToken }  from '#main_util/security.util.js';
 import { getEnvorThrow } from '#src/utils/mains/general.util.js';
 
-const tokenExpiry = parseInt(getEnvorThrow("TOKEN_EXPIRY"));
-
-// const tokenExpiry = parseInt(process.env.TOKEN_EXPIRY ?? '3600', 10); // default to 3600 seconds if undefined
+const TOKEN_EXPIRY = parseInt(getEnvorThrow("TOKEN_EXPIRY"));
 
 const dbFindUnexpiredToken = async (token: string): Promise<string|null> => {
     token = selEncrypt(token, 'token');
@@ -20,7 +18,7 @@ const dbUpdateOrCeateToken = async (userId: string): Promise<string|null> => {
             { user_id: userId },
             {
                 token,
-                expire_at: new Date(Date.now() + tokenExpiry)
+                expire_at: new Date(Date.now() + TOKEN_EXPIRY)
             },
             {
                 new: true,
@@ -36,7 +34,7 @@ const DbRenewToken = async (userId: string): Promise<boolean> => {
     const renew = await Token.findOneAndUpdate(
         { user_id: userId },
         {
-            expire_at: new Date(Date.now() + tokenExpiry)
+            expire_at: new Date(Date.now() + TOKEN_EXPIRY)
         },
     );
 

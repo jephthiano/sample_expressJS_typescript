@@ -32,7 +32,6 @@ const emailDTO = (data: sendMessageInterface) => {
 };
 
 const smsDTO = (data: sendMessageInterface) => {
-    const send_medium = 'sms';
     return {
         first_name: data.first_name?.trim() ?? "User",
         receiving_medium: data.receiving_medium?.trim(),
@@ -43,7 +42,6 @@ const smsDTO = (data: sendMessageInterface) => {
 };
 
 const whatsappDTO = (data: sendMessageInterface) => {
-    const send_medium = 'whatsapp';
     return {
         first_name: data.first_name?.trim() ?? "User",
         receiving_medium: data.receiving_medium?.trim(),
@@ -55,7 +53,6 @@ const whatsappDTO = (data: sendMessageInterface) => {
 
 
 const pushNotificationDTO = (data: sendMessageInterface) => {
-    const send_medium = 'push_notification';
     return {
         first_name: data.first_name?.trim(),
         receiving_medium: data.receiving_medium?.trim(),

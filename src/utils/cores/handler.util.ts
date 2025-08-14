@@ -1,5 +1,8 @@
 import { Response } from 'express';
 import { ValidationError, CustomApiException } from '#core_util/errors.util.js';
+import { getEnvorThrow } from '../mains/general.util.js';
+
+const NODE_ENV = getEnvorThrow("NODE_ENV");
 
 /**
  * Send a standardized JSON response.
@@ -31,10 +34,9 @@ function handleException(res: Response, error: unknown) {
 
   // for database error
   if (isErrorWithName(error, "SequelizeDatabaseError") || isErrorWithName(error, "MongoError")) {
-    const errorData =
-      process.env.NODE_ENV === "development"
-        ? { stack: error.stack, message: error.message }
-        : [];
+    const errorData = NODE_ENV === "development"
+                      ? { stack: error.stack, message: error.message }
+                      : [];
     return sendResponse(res, {}, "Something went wrong", false, errorData, 500);
   }
 
@@ -45,10 +47,9 @@ function handleException(res: Response, error: unknown) {
 
   // fallback
   if (error instanceof Error) {
-    const errorData =
-      process.env.NODE_ENV === "development"
-        ? { message: error.message, stack: error.stack }
-        : [];
+    const errorData = NODE_ENV === "development"
+                      ? { message: error.message, stack: error.stack }
+                      : [];
     return sendResponse(res, {}, "Something went wrong", false, errorData, 500);
   }
 

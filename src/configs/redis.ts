@@ -7,6 +7,7 @@ const logError = (type: string, data: string) => log(type, data, 'error');
 
 const rawPort = parseInt(getEnvorThrow("REDIS_PORT"));
 const redisHost = getEnvorThrow("REDIS_HOST");
+// const redisPassword = getEnvorThrow("REDIS_PASSWORD");
 
 const redisPort = Number(rawPort);
 if (isNaN(redisPort)) throw new Error('REDIS_PORT must be a valid number');
@@ -15,7 +16,7 @@ const redis = new Redis({
     host: redisHost,
     port: redisPort,
     maxRetriesPerRequest: null,
-    // password: process.env.REDIS_PASSWORD, // Uncomment if using auth
+    // password: redisPassword, // Uncomment if using auth
 });
 
 logInfo('REDIS', `Connected to Redis at ${redisHost}:${redisPort}`);
