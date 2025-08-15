@@ -5,9 +5,9 @@ import validator from 'validator';
 import { queueRehash } from '#queue/rehashQueue.js';
 import { getEnvorThrow } from './general.util.js';
 
-const key = getEnvorThrow("ENC_KEY");
-const iv = getEnvorThrow("ENC_IV");
-const cost = getEnvorThrow("HASH_COST");
+const ENC_KEY = getEnvorThrow("ENC_KEY");
+const ENC_IV = getEnvorThrow("ENC_IV");
+const HASH_COST = getEnvorThrow("HASH_COST");
 // const method = getEnvorThrow("ENC_METHOD"); // Encryption method
 
 const enc_array = ['general', 'token', 'receiving_medium'];
@@ -28,7 +28,7 @@ const verifyPassword = async (plainPassword: string, hashedPassword: string, use
 
 const passwordNeedRehash = (hashedPassword: string): boolean => {
     const currentRounds: number = parseInt(hashedPassword.split('$')[2], 10); // split by $
-    return currentRounds !== parseInt(cost);
+    return currentRounds !== parseInt(HASH_COST);
 }
 
 // Encrypt only if type exists in enc_array
@@ -39,14 +39,14 @@ const selDecrypt = (data :string , type: string = 'general') => enc_array.includ
 
 const encrypt = (data: string) => cryptoJS.AES.encrypt(
     data,
-    cryptoJS.enc.Utf8.parse(key),
-    { iv: cryptoJS.enc.Utf8.parse(iv) }
+    cryptoJS.enc.Utf8.parse(ENC_KEY),
+    { iv: cryptoJS.enc.Utf8.parse(ENC_IV) }
 ).toString();
 
 const decrypt = (data: string) => cryptoJS.AES.decrypt(
     data,
-    cryptoJS.enc.Utf8.parse(key),
-    { iv: cryptoJS.enc.Utf8.parse(iv) }
+    cryptoJS.enc.Utf8.parse(ENC_KEY),
+    { iv: cryptoJS.enc.Utf8.parse(ENC_IV) }
 ).toString(cryptoJS.enc.Utf8);
 
 const validateInput = (data: string, type: string) => {

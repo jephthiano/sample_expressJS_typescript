@@ -11,6 +11,8 @@ const isValidOtpParam =  async (type: otpUseCase) => {
     return ['sign_up', 'forgot_password'].includes(type);
 }
 
+const OTP_EXPIRY = getEnvorThrow("OTP_EXPIRY");
+
 // SEND OTP
 const sendOtp = async (data: SendOtpInterface): Promise<boolean> => {
     let response = false;
@@ -32,7 +34,6 @@ const sendOtp = async (data: SendOtpInterface): Promise<boolean> => {
 
 // VERIFY OTP
 const verifyNewOtp = async (data: UpdateOtpInterface): Promise<boolean> => {
-    const otpExpiry = getEnvorThrow("OTP_EXPIRY");
     const { receiving_medium, use_case, code } = data;
 
     const otpRecord = await findOneOtpData(receiving_medium, use_case, 'new');
@@ -50,13 +51,12 @@ const verifyNewOtp = async (data: UpdateOtpInterface): Promise<boolean> => {
     if(!await updateOtpStatus({ receiving_medium, use_case, code })) triggerError("Error occurred while running request", [], 500);
     
     // Check if the OTP has expired (300 seconds = 5 minutes)
-    if(isDateLapsed(reg_date, parseInt(otpExpiry))) triggerError("Otp code has expired", []);
+    if(isDateLapsed(reg_date, parseInt(OTP_EXPIRY))) triggerError("Otp code has expired", []);
 
     return true;
 };
 
 const verifyUsedOtp = async (data: UpdateOtpInterface): Promise<boolean> => {
-    const otpExpiry = getEnvorThrow("OTP_EXPIRY");
     const { receiving_medium, use_case, code } = data;
 
     const otpRecord = await findOneOtpData(receiving_medium, use_case, 'used');
@@ -70,7 +70,7 @@ const verifyUsedOtp = async (data: UpdateOtpInterface): Promise<boolean> => {
 
     if(!isOtpCorrect) triggerError("Incorrect otp code", [], 401);
     
-    if(isDateLapsed(reg_date, parseInt(otpExpiry))) triggerError("Request timeout, try again", []);
+    if(isDateLapsed(reg_date, parseInt(OTP_EXPIRY))) triggerError("Request timeout, try again", []);
 
     return true;
 };
