@@ -10,7 +10,7 @@ router.get('/messaging', async (req: Request, res: Response) => {
     const messageData: sendMessageInterface = {
         // first_name: 'Jephthaooh',
         receiving_medium: 'jephthahooh@gmail.com',
-        type: 'welcome',
+        message_type: 'welcome',
         send_medium: 'email',
     };
 
@@ -18,7 +18,7 @@ router.get('/messaging', async (req: Request, res: Response) => {
     // const messageData: sendMessageInterface = {
     //     first_name: 'Jephthaooh',
     //     receiving_medium: '07047474438',
-    //     type: 'welcome',
+    //     message_type: 'welcome',
     //     send_medium: 'whatsapp',
     // };
 
@@ -26,7 +26,7 @@ router.get('/messaging', async (req: Request, res: Response) => {
     // const messageData: sendMessageInterface = {
     //     first_name: 'Jephthaooh',
     //     receiving_medium: '07047474438',
-    //     type: 'welcome',
+    //     message_type: 'welcome',
     //     send_medium: 'sms',
     // };
 
@@ -34,7 +34,7 @@ router.get('/messaging', async (req: Request, res: Response) => {
     // const messageData: sendMessageInterface  = {
     //     first_name: 'Jephthaooh',
     //     receiving_medium: 'dfgvghvgvgdv',
-    //     type: 'welcome',
+    //     message_type: 'welcome',
     //     send_medium: 'push_notification',
     // };
 

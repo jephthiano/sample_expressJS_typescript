@@ -1,6 +1,5 @@
-import { UserResourceInterface } from "#src/types/user/interface.js";
 import { Request, Response } from "express";
-import { getEnvorThrow } from "./general.util.js";
+import { getEnvorThrow } from "#src/utils/mains/general.util.js";
 
 const setTokenCookie = (res: Response, token: string|null) => {
     const TOKEN_TYPE = getEnvorThrow('TOKEN_TYPE');

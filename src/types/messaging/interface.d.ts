@@ -5,7 +5,7 @@ interface sendMessageInterface {
     first_name?: string;
     receiving_medium: string;
     send_medium: messageMediumType;
-    type: sendMessageType;
+    message_type: sendMessageType;
     code?: string;
 };
 

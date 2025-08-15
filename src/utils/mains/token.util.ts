@@ -4,7 +4,7 @@ import { dbFindUnexpiredToken, dbDeleteToken, dbUpdateOrCeateToken, DbRenewToken
 import { redisGetUserIdByToken, redisDeleteToken, redisCreateToken, redisRenewToken, } from '#database/redis/token.db.js';
 import { createJwtToken, renewJwtToken, validateJwtToken } from '#service_util/validation/jwt.js';
 import { extractCookieToken } from '#main_util/cookie.util.js';
-import { getEnvorThrow } from './general.util.js';
+import { getEnvorThrow } from '#src/utils/mains/general.util.js';
 
 const TOKEN_SETTER = getEnvorThrow("TOKEN_SETTER");
 const TOKEN_TYPE = getEnvorThrow("TOKEN_TYPE");
