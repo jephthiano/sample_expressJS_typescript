@@ -1,5 +1,6 @@
 import { findUserByEmailOrPhone, createUserAccount, resetUserPaswword } from '#database/mongo/user.db.js';
-import type  { CreateUserInterface, ResetPasswordInterface, ResetPasswordResponseInterface, UserDocument } from '#src/types/user/interface.js';
+import type  { UserDocument } from '#src/types/user/interface.js';
+import type  { RegsiterRevampInterface, SignupRevampInterface, ResetPasswordRevampInterface } from '#src/types/auth/interface.js';
 
 class AuthRepository
 {
@@ -8,11 +9,11 @@ class AuthRepository
         return await findUserByEmailOrPhone(loginId);
     }
 
-    static async createUser(data: CreateUserInterface): Promise<UserDocument | null> {
+    static async createUser(data: RegsiterRevampInterface | SignupRevampInterface): Promise<UserDocument | null> {
         return await createUserAccount(data);
     }
 
-    static async updatePassword(data: ResetPasswordInterface): Promise<null | ResetPasswordResponseInterface> {
+    static async updatePassword(data: ResetPasswordRevampInterface): Promise<null | UserDocument> {
         return await resetUserPaswword(data);
     }
 }

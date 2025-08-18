@@ -1,9 +1,10 @@
 import { findSingleValue } from '#database/mongo/general.db.js';
 import User from '#model/User.schema.js';
-import { selEncrypt, selDecrypt }  from '#main_util/security.util.js';
+import { selEncrypt }  from '#main_util/security.util.js';
 import { createUserDTO, updatePasswordDTO } from '#src/dtos/core/user.dto.js';
 import type { ModelName } from '#src/types/general/types.js';
-import type { CreateUserInterface, ResetPasswordInterface, ResetPasswordResponseInterface, UserDocument } from '#src/types/user/interface.js';
+import type { UserDocument } from '#src/types/user/interface.js';
+import type { SignupRevampInterface, RegsiterRevampInterface , ResetPasswordRevampInterface} from '#src/types/auth/interface.js';
 
 const findUserByID = async (userId: string): Promise<UserDocument | null> => {
     return await User.findOne({ _id: userId});
@@ -42,12 +43,12 @@ const findUserSingleValuebyEncField = async (model: ModelName, checkField: strin
     return await findSingleValue(model, checkField, checkValue, returnField);
 }
 
-const createUserAccount = async(data: CreateUserInterface): Promise<UserDocument | null> => {
+const createUserAccount = async(data: RegsiterRevampInterface | SignupRevampInterface): Promise<UserDocument | null> => {
     const userData = createUserDTO(data);
     return await User.create(userData);
 }
 
-const resetUserPaswword = async(data: ResetPasswordInterface): Promise<null | ResetPasswordResponseInterface> => {
+const resetUserPaswword = async(data: ResetPasswordRevampInterface): Promise<null | UserDocument> => {
     
         const updatePasswordData = updatePasswordDTO(data);
         
@@ -59,13 +60,8 @@ const resetUserPaswword = async(data: ResetPasswordInterface): Promise<null | Re
             { password },
             { new: true }
         )  
-        
-        if(!user) return null;
 
-        return {
-            email: selDecrypt(user.email, 'email'),
-            first_name: selDecrypt(user.first_name, 'first_name'),
-        };
+        return user ?? null
 }
 
 export {

@@ -1,9 +1,7 @@
 import { findUserByEmailOrPhone , findEmailMobileNumberUsername} from '#database/mongo/user.db.js';
 import { isEmptyObject, isEmptyString, replaceValues } from '#main_util/general.util.js';
 import { validateInput, validatePassword } from '#main_util/security.util.js';
-import type { LoginInterface, RegsiterInterface, ResetPasswordInterface, SignupInputInterface } from '#src/types/user/interface.js';
 import type { otpUseCase } from '#src/types/otp/types.js';
-import type { SendOtpInputInterface, VerifyOtpInputInterface } from '#src/types/otp/interface.js';
 
 // Utility function for response formatting
 const formatResponse = (errors: Record<string, string>) => ({
@@ -13,7 +11,7 @@ const formatResponse = (errors: Record<string, string>) => ({
 
 
 // Login function
-const login = async (inputs: LoginInterface) => {
+const login = async (inputs: any) => {
     const errors: Record<string, string> = {};
     const { login_id, password } = inputs;
 
@@ -29,7 +27,7 @@ const login = async (inputs: LoginInterface) => {
 };
 
 // Registration
-const register = async (inputs: RegsiterInterface) => {
+const register = async (inputs: any) => {
     const errors: Record<string, string> = {};
     const {email, mobile_number, first_name, last_name, username, gender, password } = inputs;
 
@@ -85,7 +83,7 @@ const register = async (inputs: RegsiterInterface) => {
 };
 
 // signup or forgot_password otp validation
-const sendOtp = async (inputs: SendOtpInputInterface, type: otpUseCase) => {
+const sendOtp = async (inputs: any, type: otpUseCase) => {
     const errors: Record<string, string> = {};
     const { receiving_medium } = inputs;
     const mediumType = validateInput(receiving_medium, 'mobile_number') ? 'mobile_number' : 'email';
@@ -117,7 +115,7 @@ const sendOtp = async (inputs: SendOtpInputInterface, type: otpUseCase) => {
 };
 
 // Verify OTP
-const verifyOtp = async (inputs: VerifyOtpInputInterface) => {
+const verifyOtp = async (inputs: any) => {
     const errors: Record<string, string> = {};
     const { code } = inputs;
 
@@ -129,7 +127,7 @@ const verifyOtp = async (inputs: VerifyOtpInputInterface) => {
 };
 
 // signup
-const signup = async (inputs: SignupInputInterface) => {
+const signup = async (inputs: any) => {
     const errors: Record<string, string> = {};
     const {receiving_medium, email, mobile_number, first_name, last_name, username, gender, password } = inputs;
 
@@ -192,7 +190,7 @@ const signup = async (inputs: SignupInputInterface) => {
 };
 
 // Reset Password
-const resetPassword = (inputs: ResetPasswordInterface) => {
+const resetPassword = (inputs: any) => {
     const errors: Record<string, string> = {};
     const { password, confirm_password } = inputs;
 

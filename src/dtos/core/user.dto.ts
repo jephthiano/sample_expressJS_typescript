@@ -1,43 +1,20 @@
-import { validateInput }  from '#main_util/security.util.js';
-import type { CreateUserInterface, ResetPasswordInterface } from '#src/types/user/interface.js';
+import type { RegsiterRevampInterface, ResetPasswordRevampInterface, SignupRevampInterface } from '#src/types/auth/interface.js';
 
-function createUserDTO(data: CreateUserInterface) {
-    const veriType = data.receiving_medium 
-                ? validateInput(data.receiving_medium, 'mobile_number') ? 'mobile_number' : 'email'
-                : null ;
-                
-    let email; let mobile_number; 
-    let email_verified_at = null; let mobile_number_verified_at = null
-    
-    if(veriType){
-        if (veriType === 'email') {
-            email_verified_at = new Date();
-            email = data.receiving_medium;
-            mobile_number = data.mobile_number?.trim();
-        } else {
-            mobile_number_verified_at = new Date();
-            mobile_number = data.receiving_medium;
-            email = data.email?.trim().toLowerCase();
-        }
-    }else{
-        email = data.email?.trim().toLowerCase();
-        mobile_number = data.mobile_number?.trim();
-    }
-
+function createUserDTO(data: SignupRevampInterface |RegsiterRevampInterface) {
     return {
-        email,
-        mobile_number,
+        email: data.email,
+        mobile_number: data.mobile_number,
         first_name: data.first_name?.trim(),
         last_name: data.last_name?.trim(),
         username: data.username?.trim().toLowerCase(),
         gender: data.gender?.trim(),
         password: data.password,
-        email_verified_at,
-        mobile_number_verified_at,
+        email_verified_at:  data.email_verified_at,
+        mobile_number_verified_at: data.mobile_number_verified_at,
     };
 }
 
-function updatePasswordDTO(data: ResetPasswordInterface) {
+function updatePasswordDTO(data: ResetPasswordRevampInterface) {
     return {
         receiving_medium: data.receiving_medium?.trim().toLowerCase(),
         password: data.password,
