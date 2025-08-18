@@ -1,4 +1,4 @@
-import { sendMessageDTO } from '#dto/messaging.dto.js';
+import { sendMessageDTO } from '#src/dtos/core/messaging.dto.js';
 import { log } from '#main_util/logger.util.js';
 import type { sendMessageInterface } from '#src/types/messaging/interface.js';
 

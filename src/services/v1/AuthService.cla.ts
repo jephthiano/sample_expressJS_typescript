@@ -118,8 +118,8 @@ class AuthService{
     }
     
 
-    static async logout(req: Request) {
-        const response = await deleteApiToken(req);
+    static async logout(token: string) {
+        const response = await deleteApiToken(token);
         if(!response) triggerError("Request failed, try again", [], 500)
 
         return response;

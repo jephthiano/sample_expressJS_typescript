@@ -7,6 +7,7 @@ import { parseMessageToObject } from '#main_util/general.util.js';
 import type { otpUseCase } from '#src/types/otp/types.js';
 import { setTokenCookie } from '#src/utils/mains/cookie.util.js';
 import { isValidOtpParam } from '#src/utils/mains/otp.util.js';
+import { getApiToken } from '#src/utils/mains/token.util.js';
 
 
 class AuthController extends BaseController{
@@ -117,7 +118,11 @@ class AuthController extends BaseController{
     // LOGOUT
     static async logout(req: Request, res: Response) {
          try {
-            const response =  await AuthService.logout(req);
+            const token = getApiToken(req);
+
+            if (!token) this.triggerError("Request failed, try again", [], 400);
+
+            const response =  await AuthService.logout(token);
 
             this.sendResponse(res, response, "Logout successfully");
         } catch (error) {

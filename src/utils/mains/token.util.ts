@@ -43,11 +43,8 @@ const validateApiToken = async (req: Request) => {
     
 };
 
-const deleteApiToken = async (req: Request) => {
-    let status = false;
-    
-    const token = getApiToken(req);
-    if(!token) return false;
+const deleteApiToken = async (token: string) => {
+    let status;
 
     if (TOKEN_SETTER === 'jwt') {
         status = true; // not available
