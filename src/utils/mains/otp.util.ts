@@ -22,8 +22,8 @@ const sendOtp = async (data: SendOtpInterface): Promise<boolean> => {
     // Store OTP
     if (await storeOtp(otpData)) {
         // send code with otp [queue]
-        const type: sendMessageType = 'otp_code';
-        const messageData = {...data, code, type};
+        const messageType: sendMessageType = 'otp_code';
+        const messageData = {...data, code, message_type: messageType};
         sendMessage(messageData, 'queue');
         
         response = true;

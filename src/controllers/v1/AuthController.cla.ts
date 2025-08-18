@@ -7,6 +7,8 @@ import { parseMessageToObject } from '#main_util/general.util.js';
 import type { otpUseCase } from '#src/types/otp/types.js';
 import { setTokenCookie } from '#src/utils/mains/cookie.util.js';
 import { isValidOtpParam } from '#src/utils/mains/otp.util.js';
+import { getApiToken } from '#src/utils/mains/token.util.js';
+import {loginInputDto, registerInputDto, resetPasswordInputDto, sendOtpInputDto, signupInputDto, verifyOtpInputDto} from '#src/dtos/input/auth.dto.js';
 
 
 class AuthController extends BaseController{
@@ -18,7 +20,9 @@ class AuthController extends BaseController{
             const { error, value } = loginJoi.validate(req.body, { abortEarly: false });
             if (error) this.triggerValidationError(parseMessageToObject(error.details));
             
-            const response = await AuthService.login(req);
+            const inputData = loginInputDto(req.body);
+            
+            const response = await AuthService.login(inputData);
 
             setTokenCookie(res, response?.token ?? null);
             this.sendResponse(res, response, "Login successful");
@@ -35,7 +39,9 @@ class AuthController extends BaseController{
             const { status, data } = await register(req.body);
             if (status) this.triggerValidationError(data);
 
-            const response = await AuthService.register(req);
+            const inputData = registerInputDto(req.body);
+
+            const response = await AuthService.register(inputData);
 
             setTokenCookie(res, response?.token ?? null);
             this.sendResponse(res, response, "Account successfully created");
@@ -55,7 +61,9 @@ class AuthController extends BaseController{
             const { status, data } = await sendOtp(req.body, type);
             if (status) this.triggerValidationError(data);
 
-            const response = await AuthService.sendOtp(req, type);
+            const inputData = sendOtpInputDto(req.body);
+
+            const response = await AuthService.sendOtp(inputData, type);
 
             this.sendResponse(res, response, "Otp code successful sent");
         } catch (error) {
@@ -73,8 +81,10 @@ class AuthController extends BaseController{
             // validate inputs
             const { status, data } = await verifyOtp(req.body);
             if (status) this.triggerValidationError(data);
+
+            const inputData = verifyOtpInputDto(req.body);
             
-            const response =  await AuthService.verifyOtp(req, type);
+            const response =  await AuthService.verifyOtp(inputData, type);
 
             return this.sendResponse(res, response, "Otp code successful verified");
         } catch (error) {
@@ -89,7 +99,9 @@ class AuthController extends BaseController{
             const { status, data } = await signup(req.body);
             if (status) this.triggerValidationError(data);
 
-            const response =  await AuthService.signup(req);
+            const inputData = signupInputDto(req.body);
+
+            const response =  await AuthService.signup(inputData);
 
             setTokenCookie(res, response?.token ?? null);
             this.sendResponse(res, response, "Account successfully created");
@@ -105,7 +117,9 @@ class AuthController extends BaseController{
             const { status, data } = resetPassword(req.body);
             if (status) this.triggerValidationError(data);
 
-           const response  =  await AuthService.resetPassword(req) ?? {};
+            const inputData = resetPasswordInputDto(req.body);
+
+           const response  =  await AuthService.resetPassword(inputData) ?? {};
            
            this.sendResponse(res, response, "Password successfully reset");
         } catch (error) {
@@ -117,7 +131,11 @@ class AuthController extends BaseController{
     // LOGOUT
     static async logout(req: Request, res: Response) {
          try {
-            const response =  await AuthService.logout(req);
+            const token = getApiToken(req);
+
+            if (!token) this.triggerError("Request failed, try again", [], 400);
+
+            const response =  await AuthService.logout(token);
 
             this.sendResponse(res, response, "Logout successfully");
         } catch (error) {

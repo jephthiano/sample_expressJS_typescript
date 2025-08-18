@@ -2,7 +2,7 @@ import { ucFirst }  from '#main_util/general.util.js';
 import type { htmlEmailInterface, sendMessageInterface } from '#src/types/messaging/interface.js';
 import type { sendMessageType, messageMediumType } from '#src/types/messaging/types.js';
 
-// pass [first_name, receiving_medium, send_medium, type and misc]
+// pass [first_name, receiving_medium, send_medium, message_type and misc]
 function sendMessageDTO(data: sendMessageInterface) {
     const send_medium: messageMediumType = data.send_medium || 'email';
     
@@ -18,8 +18,8 @@ function sendMessageDTO(data: sendMessageInterface) {
 
 const emailDTO = (data: sendMessageInterface) => {
     const first_name: string = data.first_name?.trim() ?? "User";
-    const subject: string = subjectTemplate(data.type);
-    const text_content: string = messageTemplate(data.type, data.send_medium, {
+    const subject: string = subjectTemplate(data.message_type);
+    const text_content: string = messageTemplate(data.message_type, data.send_medium, {
             code: data.code?.trim() || null,
         });
     return {
@@ -35,7 +35,7 @@ const smsDTO = (data: sendMessageInterface) => {
     return {
         first_name: data.first_name?.trim() ?? "User",
         receiving_medium: data.receiving_medium?.trim(),
-        message: messageTemplate(data.type, data.send_medium, {
+        message: messageTemplate(data.message_type, data.send_medium, {
             code: data.code?.trim() || null,
         }),
     };
@@ -45,7 +45,7 @@ const whatsappDTO = (data: sendMessageInterface) => {
     return {
         first_name: data.first_name?.trim() ?? "User",
         receiving_medium: data.receiving_medium?.trim(),
-        message: messageTemplate(data.type, data.send_medium, {
+        message: messageTemplate(data.message_type, data.send_medium, {
             code: data.code?.trim() || null,
         }),
     };
@@ -56,22 +56,22 @@ const pushNotificationDTO = (data: sendMessageInterface) => {
     return {
         first_name: data.first_name?.trim(),
         receiving_medium: data.receiving_medium?.trim(),
-        message: messageTemplate(data.type, data.send_medium, {
+        message: messageTemplate(data.message_type, data.send_medium, {
             code: data.code?.trim() || null,
         }),
     };
 };
 
-const subjectTemplate = (type: sendMessageType) => {
+const subjectTemplate = (message_type: sendMessageType) => {
     const subjects = {
         welcome: 'WELCOME TO JEPH VTU',
         otp_code: 'Request for OTP Code',
         reset_password: 'Reset Password',
     };
-    return subjects[type] || '';
+    return subjects[message_type] || '';
 };
 
-const messageTemplate = (type:sendMessageType, medium = 'email', data: Record<string, unknown> = {}) => {
+const messageTemplate = (message_type:sendMessageType, medium = 'email', data: Record<string, unknown> = {}) => {
     if(medium){
 
     }
@@ -80,7 +80,7 @@ const messageTemplate = (type:sendMessageType, medium = 'email', data: Record<st
         otp_code: `Your OTP code is ${data.code}. Please note that this code expires in 5 minutes. Do not share this code with anyone.`,
         reset_password: 'You have successfully reset your password. If this action was not performed by you, kindly reset your password or notify the admin.',
     };
-    return messages[type] || '';
+    return messages[message_type] || '';
 };
 
 const htmlEmailTemplate = (data: htmlEmailInterface) => {

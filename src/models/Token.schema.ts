@@ -1,5 +1,5 @@
 import mongoose, { Query, UpdateQuery } from 'mongoose';
-import type { TokenAttrs } from '#src/types/otp_token/interface.js';
+import type { TokenAttrs } from '#src/types/token/interface.js';
 import { selEncrypt } from '#main_util/security.util.js';
 const { Schema } = mongoose;
 

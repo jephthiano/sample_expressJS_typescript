@@ -4,7 +4,7 @@ import { dbFindUnexpiredToken, dbDeleteToken, dbUpdateOrCeateToken, DbRenewToken
 import { redisGetUserIdByToken, redisDeleteToken, redisCreateToken, redisRenewToken, } from '#database/redis/token.db.js';
 import { createJwtToken, renewJwtToken, validateJwtToken } from '#service_util/validation/jwt.js';
 import { extractCookieToken } from '#main_util/cookie.util.js';
-import { getEnvorThrow } from './general.util.js';
+import { getEnvorThrow } from '#src/utils/mains/general.util.js';
 
 const TOKEN_SETTER = getEnvorThrow("TOKEN_SETTER");
 const TOKEN_TYPE = getEnvorThrow("TOKEN_TYPE");
@@ -43,11 +43,8 @@ const validateApiToken = async (req: Request) => {
     
 };
 
-const deleteApiToken = async (req: Request) => {
-    let status = false;
-    
-    const token = getApiToken(req);
-    if(!token) return false;
+const deleteApiToken = async (token: string) => {
+    let status;
 
     if (TOKEN_SETTER === 'jwt') {
         status = true; // not available

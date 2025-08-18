@@ -19,36 +19,30 @@ interface OtpModel extends Model<OtpDocument> {
   build(attrs: OtpAttrs): OtpDocument;
 }
 
-
-interface SendOtpInputInterface {
+interface UpdateOtpInterface{
   receiving_medium: string;
-}
-
-interface VerifyOtpInputInterface extends SendOtpInputInterface{
   code: string;
-}
-
-interface UpdateOtpInterface extends VerifyOtpInputInterface{
   use_case: otpUseCase;
 };
 
-interface SendOtpInterface extends SendOtpInputInterface{
-  first_name?: string;
-  send_medium: messageMediumType;
-  use_case: otpUseCase;
-};
-
-interface StoreOtpInterface extends VerifyOtpInputInterface{
+interface StoreOtpInterface{
+  receiving_medium: string;
+  code: string;
   first_name?: string;
   send_medium?: messageMediumType;
   use_case: otpUseCase;
 };
 
+interface SendOtpInterface{
+  receiving_medium: string;
+  first_name?: string;
+  send_medium: messageMediumType;
+  use_case: otpUseCase;
+};
+
 export { 
     OtpAttrs,
-    SendOtpInputInterface,
-    VerifyOtpInputInterface,
     UpdateOtpInterface,
-    SendOtpInterface, 
     StoreOtpInterface,
+    SendOtpInterface, 
 };

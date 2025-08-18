@@ -28,58 +28,6 @@ interface UserModel extends Model<UserDocument> {
   build(attrs: UserAttrs): UserDocument;
 }
 
-interface LoginInterface {
-  login_id: string;
-  password: string;
-};
-
-interface RegsiterInterface {// remove and replace with createUserInterface is one regsiter system is used
-  email: string;
-  mobile_number: string;
-  username: string;
-  first_name: string;
-  last_name: string;
-  gender: string;
-  password: string;
-}
-
-interface SignupInputInterface { // remove and replace with createUserInterface is one regsiter system is used
-    receiving_medium: string;
-    code: string;
-    email?: string;
-    mobile_number?: string;
-    username: string;
-    first_name: string;
-    last_name: string;
-    gender: string;
-    password: string;
-}
-
-interface CreateUserInterface extends SignupInputInterface{ // used by register and sign up
-    receiving_medium?: string;
-    code?: string;
-    email?: string;
-    mobile_number?: string;
-    username: string;
-    first_name: string;
-    last_name: string;
-    gender: string;
-    password: string;
-};
-
-interface ResetPasswordInterface {
-    receiving_medium: string;
-    code: string;
-    password: string;
-    confirm_password: string;
-}
-
-interface ResetPasswordResponseInterface {
-    email: string, 
-    first_name: string
-}
-
-
 interface UserResourceInterface {
     id: string;
     unique_id: string;
@@ -104,11 +52,5 @@ export {
     UserAttrs,
     UserModel,
     UserDocument,
-    LoginInterface,
-    RegsiterInterface,
-    SignupInputInterface,
-    CreateUserInterface, 
-    ResetPasswordInterface,
-    ResetPasswordResponseInterface,
     UserResourceInterface,
 };

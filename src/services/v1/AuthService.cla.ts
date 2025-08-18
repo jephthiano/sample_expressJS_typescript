@@ -9,12 +9,13 @@ import { deleteApiToken } from '#main_util/token.util.js';
 import { triggerError} from '#core_util/handler.util.js';
 import type { messageMediumType } from '#src/types/messaging/types.js';
 import type { otpUseCase } from '#src/types/otp/types.js';
+import type { LoginRevampInterface, RegsiterRevampInterface, ResetPasswordRevampInterface, SendOtpRevampInterface, SignupRevampInterface, VerifyOtpRevampInterface, } from '#src/types/auth/interface.js';
 
 class AuthService{
 
     // LOGIN
-    static async login(req: Request) {
-        const { login_id, password } = req.body;
+    static async login(inputData: LoginRevampInterface) {
+        const { login_id, password } = inputData;
 
         // Get user data by login ID
         const user = await AuthRepository.getUserByLoginId(login_id);
@@ -33,23 +34,23 @@ class AuthService{
     }
 
     // REGISTER
-    static async register(req: Request) {
-        const { first_name, email } = req.body;
+    static async register(inputData: RegsiterRevampInterface) {
+        const { first_name, email } = inputData;
 
         // Create user
-        const user = await AuthRepository.createUser(req.body);
+        const user = await AuthRepository.createUser(inputData);
         if (!user) triggerError("Account creation failed", [], 500);
 
         // Send welcome email [PASS TO QUEUE JOB]
-        sendMessage({ first_name, receiving_medium: email, send_medium: 'email', type: 'welcome' }, 'queue');
+        sendMessage({ first_name, receiving_medium: email, send_medium: 'email', message_type: 'welcome' }, 'queue');
         
         // Fetch user-related data
         return await FetchController.authFetchData(user);
     }
 
     // [SEND OTP]
-    static async sendOtp(req: Request, use_case: otpUseCase) {
-        const { receiving_medium } = req.body;
+    static async sendOtp(inputData: SendOtpRevampInterface, use_case: otpUseCase) {
+        const { receiving_medium } = inputData;
         const send_medium: messageMediumType = (validateInput(receiving_medium, 'email')) ? 'email' : 'whatsapp';
 
         const data = { receiving_medium, send_medium, use_case};
@@ -61,10 +62,10 @@ class AuthService{
     }
 
     // [VERIFY OTP]
-    static async verifyOtp(req: Request, use_case: otpUseCase) {
+    static async verifyOtp(inputData: VerifyOtpRevampInterface, use_case: otpUseCase) {
         const data = {
-            receiving_medium: req.body.receiving_medium,
-            code: req.body.code,
+            receiving_medium: inputData.receiving_medium,
+            code: inputData.code,
             use_case
         };
 
@@ -73,17 +74,17 @@ class AuthService{
         return [];
     }
 
-    static async signup(req: Request) {
-        const { receiving_medium, code, first_name, email } = req.body;
+    static async signup(inputData: SignupRevampInterface) {
+        const { receiving_medium, code, first_name, email } = inputData;
     
         await verifyUsedOtp({ receiving_medium, use_case: 'sign_up', code });
 
         // Create user
-        const user = await AuthRepository.createUser(req.body);
+        const user = await AuthRepository.createUser(inputData);
         if (!user) triggerError("Account creation failed", [], 500);
 
         // Send welcome email [queue]
-        sendMessage({ first_name, receiving_medium: email, send_medium: 'email', type: 'welcome' }, 'queue');
+        sendMessage({ first_name, receiving_medium: email, send_medium: 'email', message_type: 'welcome' }, 'queue');
         // Clean up OTP [queue]
         queueDeleteOtp(receiving_medium);
         
@@ -92,22 +93,22 @@ class AuthService{
     }
 
     //FORGOT PASSWORD [RESET PASSWORD]
-    static async resetPassword(req: Request) {
-        const { code, receiving_medium } = req.body;
+    static async resetPassword(inputData: ResetPasswordRevampInterface) {
+        const { code, receiving_medium } = inputData;
         
         await verifyUsedOtp({ receiving_medium, use_case: 'forgot_password', code }); 
 
-        const updateUserData = await AuthRepository.updatePassword(req.body);
-        if(!updateUserData) triggerError("Password reset failed", [], 500);
+        const userData = await AuthRepository.updatePassword(inputData);
+        if(!userData) triggerError("Password reset failed", [], 500);
 
         
         // Send password reset notification email [queue]
         sendMessage(
             { 
-                first_name: updateUserData.first_name,
-                receiving_medium: updateUserData.email,
+                first_name: userData.first_name,
+                receiving_medium: userData.email,
                 send_medium: 'email', 
-                type: 'reset_password' 
+                message_type: 'reset_password' 
             }
             , 'queue'
         );
@@ -118,8 +119,8 @@ class AuthService{
     }
     
 
-    static async logout(req: Request) {
-        const response = await deleteApiToken(req);
+    static async logout(token: string) {
+        const response = await deleteApiToken(token);
         if(!response) triggerError("Request failed, try again", [], 500)
 
         return response;

@@ -3,17 +3,17 @@ import cryptoJS from 'crypto-js';
 import bcrypt from 'bcrypt';
 import validator from 'validator';
 import { queueRehash } from '#queue/rehashQueue.js';
-import { getEnvorThrow } from './general.util.js';
+import { getEnvorThrow } from '#src/utils/mains/general.util.js';
 
 const ENC_KEY = getEnvorThrow("ENC_KEY");
 const ENC_IV = getEnvorThrow("ENC_IV");
 const HASH_COST = getEnvorThrow("HASH_COST");
-// const method = getEnvorThrow("ENC_METHOD"); // Encryption method
+// const ENC_METHOD = getEnvorThrow("ENC_METHOD"); // Encryption method
 
 const enc_array = ['general', 'token', 'receiving_medium'];
 
 // Hash password asynchronously
-const hashPassword = async (password: string) => await bcrypt.hash(password, 10);
+const hashPassword = async (password: string) => await bcrypt.hash(password, HASH_COST);
 
 // Verify password asynchronously
 const verifyPassword = async (plainPassword: string, hashedPassword: string, userId: null | string = null) => {
