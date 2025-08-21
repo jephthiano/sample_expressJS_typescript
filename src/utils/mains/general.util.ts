@@ -9,24 +9,11 @@ const getEnvorThrow = (key: string): string => {
 
 const isEmptyObject = (obj: object):boolean => Object.keys(obj).length === 0;
 
-const isEmptyArray = (array: any[]):boolean => Array.isArray(array) && array.length === 0;
-
-const isObject = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' &&
-  value !== null &&
-  !Array.isArray(value);
-
-const isKeyInObject = (key: string, object: object): boolean => Object.prototype.hasOwnProperty.call(object, key);
-
-const isValidString = (data: unknown): boolean => typeof data === 'string' && data.trim().length > 0;
-
 const isEmptyString = (variable: unknown): boolean => typeof variable === 'string' && variable.trim().length === 0;
 
 const inArray = (value: string, array: unknown[]): boolean => array.includes(value);
 
 const isValidData = (data: unknown): boolean => !(data === undefined || data === null || data === '');
-
-const isNumber = (value: unknown): boolean => typeof value === 'number' && Number.isFinite(value);
 
 const isDateLapsed = ( givenDate: Date, durationSeconds: number = 0, checkDate: Date = new Date() ): boolean => {
   const milliDuration = durationSeconds * 1000;
@@ -57,15 +44,10 @@ const parseMessageToObject = (errorsArray: ErrorLike[]): Record<string, string> 
 export {
     getEnvorThrow,
     isEmptyObject,
-    isEmptyArray,
-    isObject,
-    isKeyInObject,
-    isValidString,
     isEmptyString,
     inArray,
     isValidData,
     replaceValues,
-    isNumber,
     ucFirst,
     isDateLapsed,
     parseMessageToObject,
